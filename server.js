@@ -107,3 +107,6 @@ for(let i = 0;i<arr.length;i++){
 }
 
 console.log(arr); 
+
+let a = 20;
+console.log(a)
