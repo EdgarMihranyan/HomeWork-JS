@@ -1,183 +1,207 @@
-'use strict'
-function User(name, age, city, street, company) {
-    if (!new.target) {
-        return new User(name, age, city, street, company)
+"use strict"
+function MyArray(...args) {
+    this.length = 0;
+    for (let i = 0; i < args.length; i++) {
+        this[this.length] = args[i]
+        this.length++
     }
-    Object.defineProperties(this, {
-        _name: { value: checkName(name), writable: true },
-        _age: { value: checkAge(age), writable: true },
-        _address: { value: {} },
-        _company: { value: checkCompany(company), writable: true }
-    })
-    Object.defineProperties(this._address, {
-        _city: { value: checkAddress(city), writable: true },
-        _street: { value: checkAddress(street), writable: true }
-    })
-    let thisObj = this;
-    Object.defineProperties(this._address, {
-        city: {
-            get: function () {
-                return thisObj._address._city;
-            },
-            set: (city) => this._address._city = checkAddress(city) ? city : this._address._city,
-            enumerable: true,
-            configurable: true
-        },
-        street: {
-            get: function () {
-                return thisObj._address._street;
-            },
-            set: (street) => this._address._street = checkAddress(street) ? street : this._address._street,
-            enumerable: true,
-            configurable: true
-        },
-    })
-    Object.defineProperties(this, {
-        name: {
-            get: function () {
-                return this._name;
-            },
-            set: (name) => this._name = checkName(name) ? name : this._name,
-            enumerable: true,
-            configurable: true
-        },
-        age: {
-            get: function () {
-                return this._age;
-            },
-            set: (age) => this._age = checkAge(age) ? age : this._age,
-            enumerable: true,
-            configurable: true
-        },
-        address: {
-            get: () => this._address,
-            enumerable: true
-        },
-        company: {
-            get: function () {
-                return this._company;
-            },
-            set: (company) => this._company = checkCompany(company) ? company : this._company,
-            enumerable: true,
-            configurable: true
-        },
-        fullAddress: {
-            get: () => `${this._address._city} ${this._address._street}`,
-            set: (newAddress) => {
-                if (checkAddress(newAddress)) {
-                    let item = newAddress.split(" ");
-                    this._address._city = item[0];
-                    this._address._street = item[1];
-                };
-            },
-            enumerable: true,
+    this.__proto__.myPush = val => {
+        this[this.length] = val;
+        this.length++;
+    };
+    this.__proto__.myPop = () => {
+        this.length--;
+        delete this[this.length];
+    };
+    this.__proto__.myUnshift = val => {
+        for (let i = this.length; 0 < i; i--) {
+            this[i] = this[i - 1];
         }
-    })
-    Object.defineProperties(this, {
-        showAge: {
-            value: () => console.log(this.age),
-            configurable: true,
-            writable: true
-        },
-        showName: {
-            value: () => console.log(this.name),
-            configurable: true,
-            writable: true
-        },
-        showCompany: {
-            value: () => console.log(this.company),
-            configurable: true,
-            writable: true
-        },
-        showAddress: {
-            value: () => console.log(`${thisObj._address.city}  ${thisObj._address.street}`),
-            configurable: true,
-            writable: true
+        this.length++;
+        this[0] = val;
+    };
+    this.__proto__.myShift = () => {
+        for (let i = 0; i < this.length; i++) {
+            this[i] = this[i + 1];
         }
-    })
-}
-function checkName(name) {
-    if (name.length < 2) {     // erkarutyun@
-        console.log('<<   Error: Name must contain at least two letters!   >>>');
-        return;
-    }
-    for (let i = 1; i < name.length; i++) { // menak araji tar@ petqa lini mecatar
-        if (name[i] !== name[i].toLowerCase()) {
-            console.log("<<<   Error: Name must not contain personal capital letters!   >>>");
-            return;
+        this.length--;
+        delete this[this.length];
+    };
+    this.__proto__.myForEach = cb => {
+        for (let i = 0; i < this.length; i++) {
+            cb(this[i], i, this)
         }
-    }
-    if (name[0] === name[0].toLowerCase()) { // araji tar@ mecatar
-        console.log('<<<   Error: The name must start with a capital letter!   >>>');
-        return;
-    }
-    for (let i = 0; i < name.length; i++) { // anun@ petq e parunaki menak tar
-        let word = name[i].toLowerCase();
-        if (!(word >= "a" && word <= "z")) {
-            console.log("<<<   Error: The name must contain only letters!   >>>");
-            return;
+    };
+    this.__proto__.myMap = cb => {
+        let arrObj = {
+            length: 0
         }
+        for (let i = 0; i < this.length; i++) {
+            arrObj[arrObj.length] = cb(this[i], i, this)
+            arrObj.length++;
+        }
+        return arrObj
     }
-    return name;
-}
-function checkAge(number) {
-    if (!(typeof number === "number")) {
-        console.log("<<<   Error: NaN!   >>>");
-        return;
-    }
-    if (number <= 0) {
-        console.log("<<<   Error: Numbers must be positive!   >>>");
-        return;
-    }
-    return number;
-}
-function checkAddress(address) {
-    if (address.length < 4) {          //  hascei anvan erkarutyun@
-        console.log('<<<   Error: Name must contain at least four letters!   >>>');
-        return;
-    }
-    for (let i = 1; i < address.length; i++) { // talisa hnaravorutyun erku ev aveli anunneri u mecatar petqa lini menak anuni araji tar@
-        if (address[i] === " " && address[i + 1] === address[i + 1].toUpperCase()) {
+    this.__proto__.myFilter = cb => {
+        let arrObj = {
+            length: 0
+        };
+        for (let i = 0; i < this.length; i++) {
+            if (cb(this[i], i, this)) {
+                arrObj[arrObj.length] = this[i]
+                arrObj.length++
+            }
+        }
+        return arrObj;
+    };
+    this.__proto__.myFind = cb => {
+        for (let i = 0; i < this.length; i++) {
+            if (cb(this[i], i, this)) {
+                return this[i];
+            }
+        }
+        return undefined;
+    };
+    this.__proto__.myFindIndex = cb => {
+        for (let i = 0; i < this.length; i++) {
+            if (cb(this[i], i, this)) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    this.__proto__.mySplice = (index, delVal, addVal) => {
+        if (delVal) {
+            for (let i = 0; i < delVal; i++) {
+                for (let j = index; j < this.length; j++) {
+                    this[j] = this[j + 1];
+                }
+                delete this[this.length - 1]
+                this.length--;
+            }
+        }
+        if (addVal) {
+            let upper = addVal.length
+            for (let i = index; i < this.length; i++) {
+                this[i + upper] = this[i];
+            }
+            let ind = index;
+            for (let i = 0; i < addVal.length; i++) {
+                this[ind] = addVal[i]
+                ind++;
+                this.length++;
+            }
+        }
+    };
+    this.__proto__.mySlice = (start, end) => {
+        let arrObj = {
+            length: 0
+        };
+        let positiveIndex = val => val * -1 - this.length - 1;
+        if (start < 0) {
+            positiveIndex(start);
+        }
+        if (end < 0) {
+            positiveIndex(end);
+        }
+        if (!end) {
+            end = this.length;
+        }
+        for (let i = start; i < end; i++) {
+            arrObj[arrObj.length] = this[i];
+            arrObj.length++;
+        }
+        return arrObj;
+    };
+    this.__proto__.myReverse = () => {
+        let arrObj = {
+            length: [this.length]
+        }
+        for (let i = 0; i < this.length / 2; i++) {
+            let temp = this[i]
+            arrObj[i] = this[this.length - 1 - i]
+            arrObj[this.length - 1 - i] = temp
+
+        }
+        return arrObj;
+    };
+    this.__proto__.myReduce = (cb, start) => {
+        let result = this[0];
+        let i = 1;
+        if (start) {
+            result = start;
+            i--;
+        }
+        while (i < this.length) {
+            result = cb(result, this[i])
             i++
-            continue;
         }
-        if (address[i] !== address[i].toLowerCase()) {
-            console.log("<<<   Error: Name must not contain personal capital letters!   >>>");
-            return;
+        return result;
+    };
+    this.__proto__.myJoin = symbol => {
+        let textNames = "";
+        for (let i = 0; i < this.length; i++) {
+            textNames = textNames + this[i];
+            if (!(i === this.length - 1)) {
+                textNames += symbol;
+            }
         }
+        return textNames;
+    };
+    this.__proto__.mySplit = (strings, symbol, del) => {
+        let arrObj = {
+            length: 0
+        };
+        for (let i = 0; i < strings.length; i++) {
+            let name = "";
+            while (!(strings[i] === symbol) && i < strings.length) {
+                name += strings[i];
+                if (symbol === "") {
+                    break;
+                }
+                i++;
+            }
+            arrObj[arrObj.length] = name;
+            arrObj.length++;
+        }
+        if (del) {
+            for (let i = 0; i < del; i++) {
+                arrObj.length--;
+                delete arrObj[arrObj.length]
+            }
+        }
+        return arrObj;
+    };
+    this.__proto__.myIndexOf = cb => {
+        for (let i = 0; i < this.length; i++) {
+            if (cb(this[i], i, this)) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    this.__proto__.myIncludes = (val, start) => {
+        for (let i = start; i < this.length; i++) {
+            if (this[i] === val) {
+                return true;
+            }
+        }
+        return false;
+    };
+    this.__proto__.myConcat = (...args) => {
+        let arrObj = {
+            length: 0
+        };
+        for (let i = 0; i < this.length; i++) {
+            arrObj[arrObj.length] = this[i]
+            arrObj.length++
+        }
+        for (let i = 0; i < args[0].length; i++) {
+            arrObj[arrObj.length] = args[0][i]
+            arrObj.length++
+        }
+        return arrObj;
     }
-    if (address[0] === address[0].toLowerCase()) { // anun@ petqa sksvi mecatarov
-        console.log('<<<   Error: The name must start with a capital letter!   >>>');
-        return;
-    }
-    for (let i = 0; i < address.length; i++) { // anun@ petqa lini menak tar
-        let word = address[i].toLowerCase();
-        let letter = word >= "a" && word <= "z";
-        if (word === " " && address[i + 1] === address[i + 1].toUpperCase() || address[i - 1] === " " && letter) {
-            continue;
-        }
-        if (!letter) {
-            console.log("<<<   Error: The name must contain only letters!   >>>");
-            return;
-        }
-    }
-    return address;
 }
-function checkCompany(company) {
-    if (company[0] === company[0].toLowerCase()) {
-        console.log(`<<<   Error: When entering company name!   >>>`);
-        return;
-    }
-    return company;
-}
-let user = new User("Edgar", 24, "Yerevan", "Axbyur Serob", "UGeek")
-user.name = "Purchulux"
-user.age = 69
-user.address.city = "Tashkent"
-user.address.street = "Pati Tak"
-user.company = "Logistic Company"
-user.showName();
-user.showAge();
-user.showAddress();
-user.showCompany();
-console.log(user.fullAddress); 
+let arr = new MyArray(1,2,3,4,5)
+console.log(arr);
