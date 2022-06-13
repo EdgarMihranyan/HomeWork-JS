@@ -129,7 +129,7 @@ app.post('/users/', async (req, res) => {
           res.status(500).send(JSON.stringify({ message: err.message }));
      }
 });
-app.deleta('/users/:index/', async (req, res) => {
+app.delete('/users/:index/', async (req, res) => {
      try {
           await validateFile(path);
           const users = JSON.parse(await readFile(path));
