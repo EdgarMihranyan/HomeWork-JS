@@ -143,6 +143,7 @@ app.deleta('/users/:index/', async (req, res) => {
 app.patch('/users/:index/', async (req, res) => {
      try {
           const user = req.body;
+          console.log('halala');
           await checkProperty(user);
           await checkNames(user.fNname);
           await checkNames(user.lName);
