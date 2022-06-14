@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import express from 'express';
-import { writeFile, existsSync, readFile } from './utils/fs-promise';
+import { writeFile, existsSync, readFile } from './utils/fs-promise.js';
 
 const checkNames = async (name) => {
      if (name[0] === name[0].toLowerCase() || name.length < 4) {
@@ -88,12 +88,12 @@ const validateFile = async (path) => {
      }
      return false;
 };
-
-const app = express();
+const app = express(); // Important
 const path = resolve('users.json');
 const port = 3000;
 
-app.use(express.json());
+console.log(app.use(express.json()));
+app.use(express.json()); // Important
 
 app.get('/users/', async (req, res) => {
      try {

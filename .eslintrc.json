@@ -13,6 +13,7 @@
     "rules": {
         "linebreak-style":"off",
         "indent": ["error", 5],
-        "no-console":"off"
+        "no-console":"off",
+        "import/extensions":"off"
     }
 }
