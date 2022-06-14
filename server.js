@@ -92,7 +92,6 @@ const app = express(); // Important
 const path = resolve('users.json');
 const port = 3000;
 
-console.log(app.use(express.json()));
 app.use(express.json()); // Important
 
 app.get('/users/', async (req, res) => {
@@ -163,4 +162,3 @@ app.listen(port, () => {
      // eslint-disable-next-line no-console
      console.log(`Example app listening on port ${port}!`);
 });
-console.log(5);
