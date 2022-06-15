@@ -1,6 +1,6 @@
-import { resolve } from 'path';
+import { resolve, relative } from 'path';
 import express from 'express';
-import { writeFile, existsSync, readFile } from './utils/fs-promise.js';
+import { writeFile, existsSync, readFile } from './src/utils/fs-promise.js';
 
 const checkNames = async (name) => {
      if (name[0] === name[0].toLowerCase() || name.length < 4) {
@@ -37,7 +37,7 @@ const createUser = async (path, users, user) => {
           throw new Error('User exists');
      }
      users.push(user);
-     writeFile(path, JSON.stringify(users));
+     writeFile(path, JSON.stringify(users), undefined, 2);
 };
 const deleteUserByIndex = async (path, users, index) => {
      if (index >= users.length) {
@@ -45,7 +45,7 @@ const deleteUserByIndex = async (path, users, index) => {
      }
      const deletedUser = users[index];
      const newUsers = users.filter((_, i) => i !== index);
-     writeFile(path, JSON.stringify(newUsers));
+     writeFile(path, JSON.stringify(newUsers), undefined, 2);
      return deletedUser;
 };
 const updateUserByIndex = async (path, users, index, updProp) => {
@@ -62,7 +62,7 @@ const updateUserByIndex = async (path, users, index, updProp) => {
      });
      // eslint-disable-next-line no-param-reassign
      users[index] = updUser;
-     writeFile(path, JSON.stringify(users));
+     writeFile(path, JSON.stringify(users), undefined, 2);
      return updUser;
 };
 
@@ -90,7 +90,7 @@ const validateFile = async (path) => {
 };
 const app = express(); // Important
 const path = resolve('users.json');
-// aaaaaaaa
+
 const port = 3000;
 
 app.use(express.json()); // Important
@@ -99,9 +99,9 @@ app.get('/users/', async (req, res) => {
      try {
           await validateFile(path);
           const users = JSON.parse(await readFile(path));
-          res.send(JSON.stringify(users));
+          res.send(JSON.stringify(users), undefined, 2);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
      }
 });
 app.get('/users/:index/', async (req, res) => {
@@ -109,9 +109,9 @@ app.get('/users/:index/', async (req, res) => {
           await validateFile(path);
           const users = JSON.parse(await readFile(path));
           const index = +req.params.index;
-          res.send(JSON.stringify(users[index]));
+          res.send(JSON.stringify(users[index]), undefined, 2);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
      }
 });
 app.post('/users/', async (req, res) => {
@@ -124,9 +124,9 @@ app.post('/users/', async (req, res) => {
           await validateFile(path);
           const users = JSON.parse(await readFile(path));
           await createUser(path, users, req.body);
-          res.status(201).send(JSON.stringify(req.body));
+          res.status(201).send(JSON.stringify(req.body), undefined, 2);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
      }
 });
 app.delete('/users/:index/', async (req, res) => {
@@ -135,9 +135,9 @@ app.delete('/users/:index/', async (req, res) => {
           const users = JSON.parse(await readFile(path));
           const index = +req.params.index;
           const deletedUser = await deleteUserByIndex(path, users, index);
-          res.status(200).send(JSON.stringify(deletedUser));
+          res.status(200).send(JSON.stringify(deletedUser), undefined, 2);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
      }
 });
 app.patch('/users/:index/', async (req, res) => {
@@ -153,9 +153,9 @@ app.patch('/users/:index/', async (req, res) => {
           const users = JSON.parse(await readFile(path));
           const index = +req.params.index;
           const updUser = await updateUserByIndex(path, users, index, user);
-          res.status(201).send(JSON.stringify(updUser));
+          res.status(201).send(JSON.stringify(updUser), undefined, 2);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
      }
 });
 
@@ -163,3 +163,4 @@ app.listen(port, () => {
      // eslint-disable-next-line no-console
      console.log(`Example app listening on port ${port}!`);
 });
+console.log(relative('/data/orandea/test/aaa', '/data/orandea/impl/bbb'));
