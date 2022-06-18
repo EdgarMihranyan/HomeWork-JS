@@ -16,19 +16,11 @@
     "productPriceInUSD": 220
   },
   {
-    "videoGameName": "Pro Evolution Soccer 2021",
-    "platform": "PS4",
-    "developers": "KONAMI",
-    "releaseDate": "2021",
-    "licenseKey": "4APO-WREK-KK8O-HYUU-E77T",
-    "productPriceInUSD": 150
-  },
-  {
     "videoGameName": "Pro Evolution Soccer 2020",
     "platform": "PS4",
     "developers": "KONAMI",
     "releaseDate": "2020",
-    "licenseKey": "kkPO WE77 T444 dft7 57kj",
+    "licenseKey": "kkPO WE7 T444 dft7 57kj",
     "productPriceInUSD": 150
   }
 ]

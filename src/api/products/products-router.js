@@ -2,13 +2,15 @@
 import { join } from 'path';
 import express from 'express';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
-import validatorProductData from './validator-product.js';
+import validatorProductData
+     from './validator-product.js';
 
 const router = express.Router();
 const filePath = join('C:/Users/EDGAR/Documents/GitHub/HomeWork-JS/src/api/products', 'products.json');
 
 const getProducts = async (path) => {
      const products = await readFile(path);
+     console.log('products', products);
      return JSON.parse(products);
 };
 
@@ -50,6 +52,8 @@ router.delete('/:index', async (req, res) => {
 router.post('/', validatorProductData, async (req, res) => {
      try {
           const products = await getProducts(filePath);
+          console.log('Aaaaa');
+
           const product = req.body;
           products.push(product);
           writeFile(filePath, JSON.stringify(products, undefined, 2));

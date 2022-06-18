@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import express from 'express';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
@@ -11,7 +10,6 @@ app.use('/users', userRouter);
 app.use('/products', productRouter);
 
 app.use((err, req, res, next) => {
-     console.log('ban');
+     console.log(err.message);
 });
-
 export default app;
