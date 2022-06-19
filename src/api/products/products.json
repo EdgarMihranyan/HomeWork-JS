@@ -1,26 +1,10 @@
 [
   {
-    "videoGameName": "The Last of Us",
-    "platform": "PS4",
-    "developers": "Naughty Dog",
-    "releaseDate": "2013",
-    "licenseKey": "4APO-WREK-KK8O-HYUU-E77T",
-    "productPriceInUSD": 120
-  },
-  {
-    "videoGameName": "The Last of Us 2",
-    "platform": "PS4",
-    "developers": "Naughty Dog",
-    "releaseDate": "2021",
-    "licenseKey": "4APO-WREK-KK8O-HYUU-E77T",
-    "productPriceInUSD": 220
-  },
-  {
-    "videoGameName": "Pro Evolution Soccer 2020",
+    "videoGameName": "Pro Evolution Soccer 2021",
     "platform": "PS4",
     "developers": "KONAMI",
-    "releaseDate": "2020",
-    "licenseKey": "kkPO WE7 T444 dft7 57kj",
+    "releaseDate": "2021",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
     "productPriceInUSD": 150
   }
 ]

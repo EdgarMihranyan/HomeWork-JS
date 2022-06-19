@@ -1,66 +1,41 @@
 /* eslint-disable no-mixed-operators */
-import { join } from 'path';
 import express from 'express';
-import { readFile, writeFile } from '../../utils/fs-promise.js';
-import validatorProductData
-     from './validator-product.js';
+import { body, param } from 'express-validator';
+import {
+     createProductC, getProductC, getProductsC, deleteProductC,
+} from './products-controller.js';
+import expressValidation from '../../utils/express-utils.js';
+import isLicenseKey from './validator-product.js';
 
 const router = express.Router();
-const filePath = join('C:/Users/EDGAR/Documents/GitHub/HomeWork-JS/src/api/products', 'products.json');
 
-const getProducts = async (path) => {
-     const products = await readFile(path);
-     console.log('products', products);
-     return JSON.parse(products);
-};
+router.get('/', getProductsC);
 
-router.get('/', async (req, res) => {
-     try {
-          const products = await getProducts(filePath);
-          res.status(200).send(JSON.stringify(products, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.get(
+     '/:index',
+     param('index').toInt(),
+     expressValidation,
+     getProductC,
+);
 
-router.get('/:index', async (req, res) => {
-     try {
-          const i = Number(req.params.index);
-          const products = await getProducts(filePath);
-          res.status(200).send(JSON.stringify(products[i], undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.delete(
+     '/:index',
+     param('index').toInt(),
+     expressValidation,
+     deleteProductC,
+);
 
-router.delete('/:index', async (req, res) => {
-     try {
-          const index = Number(req.params.index);
-          const products = await getProducts(filePath);
-          if (index >= products.length) {
-               throw new Error('User not exists');
-          }
-          const removedProduct = products[index];
-          const newProducts = products.filter((_, i) => i !== index);
-          writeFile(filePath, JSON.stringify(newProducts, undefined, 2));
-          res.status(200).send(JSON.stringify(removedProduct, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
-
-router.post('/', validatorProductData, async (req, res) => {
-     try {
-          const products = await getProducts(filePath);
-          console.log('Aaaaa');
-
-          const product = req.body;
-          products.push(product);
-          writeFile(filePath, JSON.stringify(products, undefined, 2));
-          res.status(201).send(JSON.stringify(req.body, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.post(
+     '/',
+     body('videoGameName').isLength({ min: 2, max: 30 }).withMessage('must be from 2 to 30 length').isAlphanumeric('en-US', { ignore: ' _-' })
+          .withMessage('must contains only letters and numbers'),
+     body('platform').isIn(['ps4', 'PS4', 'ps3', 'PS3', 'xbox', 'XBOX', 'windows', 'WINDOWS']).withMessage('this platform is not supported'),
+     body('developers').isAlphanumeric('en-US', { ignore: ' -' }).withMessage('must contains only letters and numbers'),
+     body('releaseDate').isInt({ min: 2000, max: 2022 }).withMessage('Wrong release year'),
+     body('productPriceInUSD').isInt({ min: 10 }).withMessage('Enter the correct amount ( "The amount must be at least $10" )'),
+     isLicenseKey,
+     expressValidation,
+     createProductC,
+);
 
 export default router;
