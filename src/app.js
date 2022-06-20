@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import express from 'express';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
@@ -9,9 +10,9 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-     console.log(err.message);
-     res.status(500).send(JSON.stringify({ errors: err.message }));
+     console.log(err);
+     res.status(409).json({ message: err.message });
 });
+
 export default app;
