@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-new-object */
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
@@ -16,19 +16,19 @@ const getProducts = async (path) => {
 export const getProductsC = async (req, res) => {
      try {
           const products = await getProducts(filePath);
-          res.status(200).send(JSON.stringify(products, undefined, 2));
+          res.status(200).json(products);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
+          res.status(500).json({ message: err.message });
      }
 };
 
 export const getProductC = async (req, res) => {
      try {
-          const i = Number(req.params.index);
+          const index = +req.params.index;
           const products = await getProducts(filePath);
-          res.status(200).send(JSON.stringify(products[i], undefined, 2));
+          res.status(200).json(products[index]);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
+          res.status(500).json({ message: err.message });
      }
 };
 
@@ -37,14 +37,21 @@ export const deleteProductC = async (req, res) => {
           const index = Number(req.params.index);
           const products = await getProducts(filePath);
           if (index >= products.length) {
-               throw new Error('User not exists');
+               throw new Object({
+                    errors: [{
+                         value: `Product with number ${index + 1}`,
+                         msg: 'This product does not exist',
+                         param: 'product',
+                         location: 'body',
+                    }],
+               });
           }
           const removedProduct = products[index];
           const newProducts = products.filter((_, i) => i !== index);
           writeFile(filePath, JSON.stringify(newProducts, undefined, 2));
-          res.status(200).send(JSON.stringify(removedProduct, undefined, 2));
+          res.status(200).json(removedProduct);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
+          res.status(500).json({ message: err.message });
      }
 };
 
@@ -54,8 +61,8 @@ export const createProductC = async (req, res) => {
           const product = req.body;
           products.push(product);
           writeFile(filePath, JSON.stringify(products, undefined, 2));
-          res.status(201).send(JSON.stringify(req.body, undefined, 2));
+          res.status(201).json(req.body);
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
+          res.status(500).json({ message: err.message });
      }
 };

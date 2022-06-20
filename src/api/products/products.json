@@ -6,5 +6,37 @@
     "releaseDate": "2021",
     "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
     "productPriceInUSD": 150
+  },
+  {
+    "videoGameName": "The Last Of Us",
+    "platform": "PS4",
+    "developers": "Naughty Dog",
+    "releaseDate": "2013",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
+    "productPriceInUSD": 100
+  },
+  {
+    "videoGameName": "The Last Of Us 2",
+    "platform": "PS4",
+    "developers": "Naughty Dog",
+    "releaseDate": "2021",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
+    "productPriceInUSD": 300
+  },
+  {
+    "videoGameName": "Death Stranding",
+    "platform": "PS4",
+    "developers": "Kojima Productions",
+    "releaseDate": "2020",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
+    "productPriceInUSD": 200
+  },
+  {
+    "videoGameName": "The Witcher 3",
+    "platform": "PS4",
+    "developers": "CD Project RED",
+    "releaseDate": "2016",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
+    "productPriceInUSD": 350
   }
 ]

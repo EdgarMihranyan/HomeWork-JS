@@ -1,64 +1,43 @@
-import { join } from 'path';
 import express from 'express';
-import { readFile, writeFile } from '../../utils/fs-promise.js';
+import { body, param } from 'express-validator';
+import expressValidation from '../../utils/express-utils.js';
+import {
+     getUserC, getUsersC, createUserC, deleteUserC,
+} from './users-controller.js';
 
 const router = express.Router();
-const filePath = join('C:/Users/EDGAR/Documents/GitHub/HomeWork-JS/src/api/users', 'users.json');
 
-const getUsers = async (path) => {
-     const users = await readFile(path);
-     return JSON.parse(users);
-};
+router.get('/', expressValidation, getUsersC);
 
-router.get('/', async (req, res) => {
-     try {
-          const users = await getUsers(filePath);
-          res.status(200).send(JSON.stringify(users, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.get('/:index', param('index').toInt(), expressValidation, getUserC);
 
-router.get('/:index', async (req, res) => {
-     try {
-          const i = Number(req.params.index);
-          const users = await getUsers(filePath);
-          res.status(200).send(JSON.stringify(users[i], undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.delete('/:index', param('index').toInt(), expressValidation, deleteUserC);
 
-router.delete('/:index', async (req, res) => {
-     try {
-          const index = Number(req.params.index);
-          const users = await getUsers(filePath);
-          if (index >= users.length) {
-               throw new Error('User not exists');
-          }
-          const removedUser = users[index];
-          const newUsers = users.filter((_, i) => i !== index);
-          writeFile(filePath, JSON.stringify(newUsers, undefined, 2));
-          res.status(200).send(JSON.stringify(removedUser, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
-
-router.post('/', async (req, res) => {
-     try {
-          const users = await getUsers(filePath);
-          const user = req.body;
-          const isUniqueUser = users.find((u) => u.username === user.username);
-          if (isUniqueUser) {
-               throw new Error('User exists');
-          }
-          users.push(user);
-          writeFile(filePath, JSON.stringify(users, undefined, 2));
-          res.status(201).send(JSON.stringify(req.body, undefined, 2));
-     } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }, undefined, 2));
-     }
-});
+router.post(
+     '/',
+     body('userName').notEmpty().withMessage('Username cannot be empty').isLength({ min: 2, max: 20 })
+          .withMessage('must be from 2 to 20 length')
+          .isAlphanumeric('en-US')
+          .withMessage('must contains only letters and numbers'),
+     body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
+          .withMessage('must be from 2 to 15 length')
+          .isAlpha('en-US')
+          .withMessage('must contains only letters'),
+     body('lastName').notEmpty().withMessage('Last name cannot be empty').isLength({ min: 3, max: 15 })
+          .withMessage('must be from 3 to 15 length')
+          .isAlpha('en-US')
+          .withMessage('must contains only letters'),
+     body('password').notEmpty().withMessage('Password cannot be empty').isLength({ min: 8, max: 20 })
+          .withMessage('must be from 8 to 20 length')
+          .isAlphanumeric('en-US')
+          .withMessage('must contains only letters'),
+     body('EmailAddress').notEmpty().withMessage('Email address cannot be empty').isEmail()
+          .withMessage('Incorrect email address'),
+     body('age').notEmpty().withMessage('Age cannot be empty').isInt({ min: 18, max: 120 })
+          .withMessage('Incorrect age'),
+     expressValidation,
+     createUserC,
+);
+router.patch('/:index');
 
 export default router;
