@@ -10,7 +10,6 @@ const filePath = resolve(__dirname, 'products.json');
 
 const getProducts = async (path) => {
      const products = await readFile(path);
-     // console.log('products', JSON.parse(products));
      return JSON.parse(products);
 };
 export const getProductsC = async (req, res) => {

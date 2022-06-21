@@ -5,7 +5,7 @@ import {
      createProductC, getProductC, getProductsC, deleteProductC,
 } from './products-controller.js';
 import expressValidation from '../../utils/express-utils.js';
-import isLicenseKey from './validator-product.js';
+import isLicenseKey from './products-validator.js';
 
 const router = express.Router();
 
