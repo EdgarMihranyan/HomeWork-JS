@@ -1,5 +1,8 @@
 import express from 'express';
 import { body, param } from 'express-validator';
+import {
+     errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty,
+} from '../../utils/errors/constant-errors.js';
 import expressValidation from '../../utils/express-utils.js';
 import {
      getUserC, getUsersC, createUserC, deleteUserC,
@@ -15,25 +18,25 @@ router.delete('/:index', param('index').toInt(), expressValidation, deleteUserC)
 
 router.post(
      '/',
-     body('userName').notEmpty().withMessage('Username cannot be empty').isLength({ min: 2, max: 20 })
-          .withMessage('must be from 2 to 20 length')
+     body('userName').notEmpty().withMessage(errorNotEmpty('userName')).isLength({ min: 2, max: 20 })
+          .withMessage(errorLength(2, 20))
           .isAlphanumeric('en-US')
-          .withMessage('must contains only letters and numbers'),
+          .withMessage(errorAlphanumeric),
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
-          .withMessage('must be from 2 to 15 length')
+          .withMessage(errorLength(2, 15))
           .isAlpha('en-US')
-          .withMessage('must contains only letters'),
-     body('lastName').notEmpty().withMessage('Last name cannot be empty').isLength({ min: 3, max: 15 })
-          .withMessage('must be from 3 to 15 length')
+          .withMessage(errorAlpha),
+     body('lastName').notEmpty().withMessage(errorNotEmpty('lastName')).isLength({ min: 3, max: 15 })
+          .withMessage(errorLength(3, 15))
           .isAlpha('en-US')
-          .withMessage('must contains only letters'),
-     body('password').notEmpty().withMessage('Password cannot be empty').isLength({ min: 8, max: 20 })
-          .withMessage('must be from 8 to 20 length')
+          .withMessage(errorAlpha),
+     body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
           .isAlphanumeric('en-US')
-          .withMessage('must contains only letters'),
-     body('EmailAddress').notEmpty().withMessage('Email address cannot be empty').isEmail()
+          .withMessage(errorAlpha),
+     body('EmailAddress').notEmpty().withMessage(errorNotEmpty('EmailAddress')).isEmail()
           .withMessage('Incorrect email address'),
-     body('age').notEmpty().withMessage('Age cannot be empty').isInt({ min: 18, max: 120 })
+     body('age').notEmpty().withMessage(errorNotEmpty('age')).isInt({ min: 18, max: 120 })
           .withMessage('Incorrect age'),
      expressValidation,
      createUserC,
