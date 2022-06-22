@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { validationResult } from 'express-validator';
 import express from 'express';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
@@ -12,7 +13,7 @@ app.use('/products', productRouter);
 
 app.use((err, req, res, next) => {
      console.log(err);
-     res.status(409).json({ message: err.message });
+     res.status(err.statusCode).json({ errors: [{ ...err }] });
 });
 
 export default app;

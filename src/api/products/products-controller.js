@@ -1,6 +1,7 @@
 /* eslint-disable no-new-object */
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { ControllerError } from '../../utils/errors/custom-errors.js';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -63,5 +64,26 @@ export const createProductC = async (req, res) => {
           res.status(201).json(req.body);
      } catch (err) {
           res.status(500).json({ message: err.message });
+     }
+};
+export const updateProductC = async (req, res, next) => {
+     try {
+          console.log('aaaaaaaaa');
+          const products = await getProducts(filePath);
+          const index = +req.params.index;
+          if (index >= products.length) throw new ControllerError(404, `${index}\` product`, 'Product not a found');
+          const updateProps = req.body;
+          Object.keys(updateProps).forEach((prop) => {
+               const product = products[index];
+               if (prop in product) {
+                    product[prop] = updateProps[prop];
+               } else {
+                    throw new ControllerError(404, prop, 'This property not a found');
+               }
+          });
+          writeFile(filePath, JSON.stringify(products, undefined, 2));
+          res.status(201).json(products[index]);
+     } catch (err) {
+          next(err);
      }
 };

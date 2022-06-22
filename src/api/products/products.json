@@ -33,10 +33,18 @@
   },
   {
     "videoGameName": "The Witcher 3",
+    "platform": "PS3",
+    "developers": "CD Project RED",
+    "releaseDate": "2016",
+    "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
+    "productPriceInUSD": 550
+  },
+  {
+    "videoGameName": "The Witcher 3",
     "platform": "PS4",
     "developers": "CD Project RED",
     "releaseDate": "2016",
     "licenseKey": "KKPO-WE74-T444-DFT7-57KJ",
-    "productPriceInUSD": 350
+    "productPriceInUSD": 500
   }
 ]
