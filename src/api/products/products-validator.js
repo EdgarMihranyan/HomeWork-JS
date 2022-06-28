@@ -1,8 +1,8 @@
-import { errorAlphanumeric } from '../../utils/errors/constant-errors.js';
-import { ValidatorError } from '../../utils/errors/custom-errors.js';
-
 /* eslint-disable no-mixed-operators */
-const checkLicenseKey = (req, res, next) => {
+import { errorAlphanumeric } from '../../constants/constant-errors.js';
+import { ValidatorError } from '../../utils/custom-errors.js';
+
+const checkLicenseKeyV = (req, res, next) => {
      if (!req.body.licenseKey) return next();
 
      const key = req.body.licenseKey;
@@ -21,4 +21,4 @@ const checkLicenseKey = (req, res, next) => {
      req.body.licenseKey = checkKey;
      return next();
 };
-export default checkLicenseKey;
+export default checkLicenseKeyV;

@@ -4,8 +4,8 @@ import {
      createProductC, getProductC, getProductsC, deleteProductC, updateProductC,
 } from './products-controller.js';
 import expressValidation from '../../utils/express-utils.js';
-import isLicenseKey from './products-validator.js';
-import { errorAlphanumeric, errorLength, errorNotEmpty } from '../../utils/errors/constant-errors.js';
+import isLicenseKeyV from './products-validator.js';
+import { errorAlphanumeric, errorLength, errorNotEmpty } from '../../constants/constant-errors.js';
 
 const router = express.Router();
 
@@ -39,7 +39,7 @@ router.post(
           .withMessage('Wrong release year'),
      body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
           .withMessage('Enter the correct amount ( "The amount must be at least $10" )'),
-     isLicenseKey,
+     isLicenseKeyV,
      expressValidation,
      createProductC,
 );
@@ -63,7 +63,7 @@ router.patch(
      body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
           .withMessage('Enter the correct amount ( "The amount must be at least $10" )')
           .optional(),
-     isLicenseKey,
+     isLicenseKeyV,
      expressValidation,
      updateProductC,
 );

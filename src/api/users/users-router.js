@@ -2,7 +2,7 @@ import express from 'express';
 import { body, param } from 'express-validator';
 import {
      errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty,
-} from '../../utils/errors/constant-errors.js';
+} from '../../constants/constant-errors.js';
 import expressValidation from '../../utils/express-utils.js';
 import {
      getUserC, getUsersC, createUserC, deleteUserC, updateUserC,

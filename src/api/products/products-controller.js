@@ -1,88 +1,50 @@
-/* eslint-disable no-new-object */
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { ControllerError } from '../../utils/errors/custom-errors.js';
-import { readFile, writeFile } from '../../utils/fs-promise.js';
+import {
+     createProductS, deleteProductS, getProductsS, updateProductS,
+} from './products-server.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const filePath = resolve(__dirname, 'products.json');
-
-const getProducts = async (path) => {
-     const products = await readFile(path);
-     return JSON.parse(products);
-};
-export const getProductsC = async (req, res) => {
+export const getProductsC = async (req, res, next) => {
      try {
-          const products = await getProducts(filePath);
-          res.status(200).json(products);
+          const getter = getProductsS();
+          res.status(200).json(getter);
      } catch (err) {
-          res.status(500).json({ message: err.message });
+          next(err);
      }
 };
 
-export const getProductC = async (req, res) => {
+export const getProductC = async (req, res, next) => {
      try {
-          const index = +req.params.index;
-          const products = await getProducts(filePath);
-          res.status(200).json(products[index]);
+          const { index } = req.params;
+          const getter = await getProductsS(index);
+          res.status(200).json(getter[index]);
      } catch (err) {
-          res.status(500).json({ message: err.message });
+          next(err);
      }
 };
 
-export const deleteProductC = async (req, res) => {
+export const deleteProductC = async (req, res, next) => {
      try {
-          const index = Number(req.params.index);
-          const products = await getProducts(filePath);
-          if (index >= products.length) {
-               throw new Object({
-                    errors: [{
-                         value: `Product with number ${index + 1}`,
-                         msg: 'This product does not exist',
-                         param: 'product',
-                         location: 'body',
-                    }],
-               });
-          }
-          const removedProduct = products[index];
-          const newProducts = products.filter((_, i) => i !== index);
-          writeFile(filePath, JSON.stringify(newProducts, undefined, 2));
-          res.status(200).json(removedProduct);
+          const { index } = req.params;
+          const deleted = await deleteProductS(index);
+          res.status(200).json(deleted);
      } catch (err) {
-          res.status(500).json({ message: err.message });
+          next(err);
      }
 };
 
-export const createProductC = async (req, res) => {
+export const createProductC = async (req, res, next) => {
      try {
-          const products = await getProducts(filePath);
-          const product = req.body;
-          products.push(product);
-          writeFile(filePath, JSON.stringify(products, undefined, 2));
-          res.status(201).json(req.body);
+          const { body } = req;
+          const created = await createProductS(body);
+          res.status(201).json(created);
      } catch (err) {
-          res.status(500).json({ message: err.message });
+          next(err);
      }
 };
 export const updateProductC = async (req, res, next) => {
      try {
-          console.log('aaaaaaaaa');
-          const products = await getProducts(filePath);
-          const index = +req.params.index;
-          if (index >= products.length) throw new ControllerError(404, `${index}\` product`, 'Product not a found');
-          const updateProps = req.body;
-          Object.keys(updateProps).forEach((prop) => {
-               const product = products[index];
-               if (prop in product) {
-                    product[prop] = updateProps[prop];
-               } else {
-                    throw new ControllerError(404, prop, 'This property not a found');
-               }
-          });
-          writeFile(filePath, JSON.stringify(products, undefined, 2));
-          res.status(201).json(products[index]);
+          const { body, param } = req;
+          const updated = await updateProductS(body, param.index);
+          res.status(201).json(updated);
      } catch (err) {
           next(err);
      }
