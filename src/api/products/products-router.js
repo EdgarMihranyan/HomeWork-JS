@@ -47,7 +47,7 @@ router.patch(
      '/:index',
      param('index').toInt(),
      body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
-          .withMessage(errorLength(2, 3))
+          .withMessage(errorLength(2, 30))
           .isAlphanumeric('en-US', { ignore: ' _-' })
           .withMessage(errorAlphanumeric)
           .optional(),

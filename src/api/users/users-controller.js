@@ -12,7 +12,7 @@ export const getUsersC = async (req, res, next) => {
 };
 export const getUserC = async (req, res, next) => {
      try {
-          const got = await getUserS(req.params.index);
+          const got = await getUserS(req.params.id);
           res.status(200).json(got);
      } catch (err) {
           next(err);
@@ -20,16 +20,16 @@ export const getUserC = async (req, res, next) => {
 };
 export const deleteUserC = async (req, res, next) => {
      try {
-          const deleted = await deleteUserS(req.params.index);
-          res.status(200).json(deleted);
+          await deleteUserS(req.params.id);
+          res.status(200).json({ message: 'User deleted' });
      } catch (err) {
           next(err);
      }
 };
 export const createUserC = async (req, res, next) => {
      try {
-          const created = await createUserS(req.body);
-          res.status(201).json(created);
+          await createUserS(req.body);
+          res.status(201).json({ message: 'User created' });
      } catch (err) {
           next(err);
      }
@@ -37,8 +37,8 @@ export const createUserC = async (req, res, next) => {
 export const updateUserC = async (req, res, next) => {
      try {
           const { body, params } = req;
-          const updated = await updateUserS(params.index, body);
-          res.status(201).json(updated);
+          await updateUserS(params.id, body);
+          res.status(201).json({ message: 'User updated' });
      } catch (err) {
           next(err);
      }

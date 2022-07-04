@@ -1,7 +1,7 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
-     errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty,
+     errorAlpha, errorLength, errorNotEmpty, errorUUID,
 } from '../../constants/constant-errors.js';
 import expressValidation from '../../utils/express-utils.js';
 import {
@@ -10,18 +10,14 @@ import {
 
 const router = express.Router();
 
-router.get('/', expressValidation, getUsersC);
+router.get('/', getUsersC);
 
-router.get('/:index', param('index').toInt(), expressValidation, getUserC);
+router.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
 
-router.delete('/:index', param('index').toInt(), expressValidation, deleteUserC);
+router.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
 
 router.post(
      '/',
-     body('userName').notEmpty().withMessage(errorNotEmpty('userName')).isLength({ min: 2, max: 20 })
-          .withMessage(errorLength(2, 20))
-          .isAlphanumeric('en-US')
-          .withMessage(errorAlphanumeric),
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
           .withMessage(errorLength(2, 15))
           .isAlpha('en-US')
@@ -34,21 +30,14 @@ router.post(
           .withMessage(errorLength(8, 20))
           .isAlphanumeric('en-US')
           .withMessage(errorAlpha),
-     body('EmailAddress').notEmpty().withMessage(errorNotEmpty('EmailAddress')).isEmail()
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
           .withMessage('Incorrect email address'),
-     body('age').notEmpty().withMessage(errorNotEmpty('age')).isInt({ min: 18, max: 120 })
-          .withMessage('Incorrect age'),
      expressValidation,
      createUserC,
 );
 router.patch(
-     '/:index',
-     param('index').toInt(),
-     body('userName').notEmpty().withMessage(errorNotEmpty('userName')).isLength({ min: 2, max: 20 })
-          .withMessage(errorLength(2, 20))
-          .isAlphanumeric('en-US')
-          .withMessage(errorAlphanumeric)
-          .optional(),
+     '/:id',
+     param('id').isMongoId().withMessage(errorUUID),
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
           .withMessage(errorLength(2, 15))
           .isAlpha('en-US')
@@ -64,11 +53,8 @@ router.patch(
           .isAlphanumeric('en-US')
           .withMessage(errorAlpha)
           .optional(),
-     body('EmailAddress').notEmpty().withMessage(errorNotEmpty('EmailAddress')).isEmail()
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
           .withMessage('Incorrect email address')
-          .optional(),
-     body('age').notEmpty().withMessage(errorNotEmpty('age')).isInt({ min: 18, max: 120 })
-          .withMessage('Incorrect age')
           .optional(),
      expressValidation,
      updateUserC,
