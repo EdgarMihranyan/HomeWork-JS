@@ -24,7 +24,8 @@ export const deleteUserS = async (id) => {
 };
 
 export const createUserS = async (user) => {
-     const got = (await getUserByEmailR(user.email)[0]);
+     const got = (await getUserByEmailR(user.email))[0];
+     console.log(got);
 
      if (got) throw new ServerError(400, user.email, 'Email is already exits');
      createUserR(user);
