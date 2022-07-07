@@ -1,5 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import { ServerError } from '../../utils/custom-errors.js';
+import { isCorrectPropertyUV } from './user-validator.js';
 import {
      createUserR, getUsersR, getUserR, getUserByEmailR, deleteUserR, updateUserR,
 } from './users-repository.js';
@@ -30,7 +31,6 @@ export const createUserS = async (user) => {
 };
 
 export const updateUserS = async (id, userUpd) => {
-     const user = await getUserS(id);
-     Object.assign(user, userUpd);
-     updateUserR(user);
+     isCorrectPropertyUV(userUpd);
+     await updateUserR(id, userUpd);
 };

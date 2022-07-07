@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-mixed-operators */
 import { errorAlphanumeric } from '../../constants/constant-errors.js';
 import { ValidatorError } from '../../utils/custom-errors.js';
@@ -7,7 +8,7 @@ const checkLicenseKeyV = (req, res, next) => {
 
      const key = req.body.licenseKey;
      let checkKey = req.body.licenseKey.toLowerCase();
-     for (let i = 0; i < checkKey.length; i++) {
+     for (let i = 0; i < checkKey.length; i += 1) {
           const latterOrNum = checkKey[i];
           if (!(latterOrNum >= 'a' && latterOrNum <= 'z' || parseFloat(latterOrNum) >= 0 && parseFloat(latterOrNum) <= 9 || latterOrNum === ' ')) {
                throw new ValidatorError(400, key, errorAlphanumeric);
@@ -22,3 +23,31 @@ const checkLicenseKeyV = (req, res, next) => {
      return next();
 };
 export default checkLicenseKeyV;
+export const isCorrectPropertyPV = (prop) => {
+     const typeSchema = {
+          videoGameName: null,
+          developers: null,
+          platform: null,
+          releaseDate: null,
+          productPriceInUSD: null,
+
+     };
+     Object.keys(prop).forEach((key) => {
+          if (!typeSchema.hasOwnProperty(key)) throw new ValidatorError(404, key, 'Property not a found');
+     });
+};
+export const isCorrectCategoryV = (req, res, next) => {
+     const prop = req.body;
+     const typeSchema = {
+          videoGameName: null,
+          developers: null,
+          platform: null,
+          releaseDate: null,
+          productPriceInUSD: null,
+
+     };
+     Object.keys(prop).forEach((key) => {
+          if (!typeSchema.hasOwnProperty(key)) throw new ValidatorError(404, key, 'Property not a found');
+     });
+     next();
+};

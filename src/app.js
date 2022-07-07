@@ -6,6 +6,7 @@ import cors from 'cors';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
 import { keys } from './config/keys.js';
+import { User } from './models/user-model.js';
 
 mongoose.connect(keys.mongoURI)
      .then(() => {

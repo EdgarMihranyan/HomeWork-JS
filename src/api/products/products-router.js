@@ -4,12 +4,20 @@ import {
      createProductC, getProductC, getProductsC, deleteProductC, updateProductC,
 } from './products-controller.js';
 import expressValidation from '../../utils/express-utils.js';
-import isLicenseKeyV from './products-validator.js';
+import isLicenseKeyV, { isCorrectCategoryV } from './products-validator.js';
 import { errorAlphanumeric, errorLength, errorNotEmpty } from '../../constants/constant-errors.js';
 
 const router = express.Router();
 
-router.get('/', getProductsC);
+router.get(
+     '/',
+     getProductsC,
+);
+
+router.get(
+     './:category',
+     isCorrectCategoryV,
+);
 
 router.get(
      '/:index',

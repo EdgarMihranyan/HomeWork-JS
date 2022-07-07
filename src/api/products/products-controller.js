@@ -1,50 +1,54 @@
+/* eslint-disable max-len */
 import {
-     createProductS, deleteProductS, getProductsS, updateProductS,
+     createProductS, deleteProductS, getProductS, getProductsS, updateProductS, getProductByCategoryS,
 } from './products-server.js';
-
-export const getProductsC = async (req, res, next) => {
-     try {
-          const getter = getProductsS();
-          res.status(200).json(getter);
-     } catch (err) {
-          next(err);
-     }
-};
 
 export const getProductC = async (req, res, next) => {
      try {
-          const { index } = req.params;
-          const getter = await getProductsS(index);
-          res.status(200).json(getter[index]);
+          const got = await getProductsS();
+          res.status(200).json(got);
      } catch (err) {
           next(err);
      }
 };
-
+export const getProductsC = async (req, res, next) => {
+     try {
+          const got = await getProductS(req.params.id);
+          res.status(200).json(got);
+     } catch (err) {
+          next(err);
+     }
+};
 export const deleteProductC = async (req, res, next) => {
      try {
-          const { index } = req.params;
-          const deleted = await deleteProductS(index);
-          res.status(200).json(deleted);
+          await deleteProductS(req.params.id);
+          res.status(200).json({ message: 'Product deleted' });
      } catch (err) {
           next(err);
      }
 };
-
 export const createProductC = async (req, res, next) => {
      try {
-          const { body } = req;
-          const created = await createProductS(body);
-          res.status(201).json(created);
+          await createProductS(req.body);
+          res.status(201).json({ message: 'Product created' });
      } catch (err) {
           next(err);
      }
 };
 export const updateProductC = async (req, res, next) => {
      try {
-          const { body, param } = req;
-          const updated = await updateProductS(body, param.index);
-          res.status(201).json(updated);
+          const { body, params } = req;
+          await updateProductS(params.id, body);
+          res.status(201).json({ message: 'Product updated' });
+     } catch (err) {
+          next(err);
+     }
+};
+export const getProductByCategoryC = async (req, res, next) => {
+     try {
+          const { body, params } = req;
+          const got = await getProductByCategoryS(params.category, body);
+          res.status(200).json(got);
      } catch (err) {
           next(err);
      }
