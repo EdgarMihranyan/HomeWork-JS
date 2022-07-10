@@ -28,3 +28,5 @@ app.use((err, req, res, next) => {
 });
 
 export default app;
+const got = await User.find();
+console.log(got);
