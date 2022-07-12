@@ -6,6 +6,7 @@ import {
 } from './users-repository.js';
 
 export const getUsersS = async () => getUsersR();
+export const getUserByEmailS = async (email) => (await getUserByEmailR(email))[0];
 
 export const getUserS = async (id) => {
      const user = await getUserR(id);
@@ -25,10 +26,9 @@ export const deleteUserS = async (id) => {
 
 export const createUserS = async (user) => {
      const got = (await getUserByEmailR(user.email))[0];
-     console.log(got);
 
      if (got) throw new ServerError(400, user.email, 'Email is already exits');
-     createUserR(user);
+     return createUserR(user);
 };
 
 export const updateUserS = async (id, userUpd) => {

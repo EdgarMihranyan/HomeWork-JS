@@ -8,15 +8,15 @@ import {
      getUserC, getUsersC, createUserC, deleteUserC, updateUserC,
 } from './users-controller.js';
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.get('/', getUsersC);
+userRouter.get('/', getUsersC);
 
-router.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
+userRouter.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
 
-router.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
+userRouter.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
 
-router.post(
+userRouter.post(
      '/',
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
           .withMessage(errorLength(2, 15))
@@ -35,7 +35,7 @@ router.post(
      expressValidation,
      createUserC,
 );
-router.patch(
+userRouter.patch(
      '/:id',
      param('id').isMongoId().withMessage(errorUUID),
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
@@ -60,4 +60,4 @@ router.patch(
      updateUserC,
 );
 
-export default router;
+export default userRouter;

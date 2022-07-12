@@ -7,33 +7,33 @@ import expressValidation from '../../utils/express-utils.js';
 import isLicenseKeyV, { isCorrectCategoryV } from './products-validator.js';
 import { errorAlphanumeric, errorLength, errorNotEmpty } from '../../constants/constant-errors.js';
 
-const router = express.Router();
+const productRouter = express.Router();
 
-router.get(
+productRouter.get(
      '/',
      getProductsC,
 );
 
-router.get(
+productRouter.get(
      './:category',
      isCorrectCategoryV,
 );
 
-router.get(
+productRouter.get(
      '/:index',
      param('index').toInt(),
      expressValidation,
      getProductC,
 );
 
-router.delete(
+productRouter.delete(
      '/:index',
      param('index').toInt(),
      expressValidation,
      deleteProductC,
 );
 
-router.post(
+productRouter.post(
      '/',
      body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
           .withMessage(errorLength(2, 3))
@@ -51,7 +51,7 @@ router.post(
      expressValidation,
      createProductC,
 );
-router.patch(
+productRouter.patch(
      '/:index',
      param('index').toInt(),
      body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
@@ -76,4 +76,4 @@ router.patch(
      updateProductC,
 );
 
-export default router;
+export default productRouter;

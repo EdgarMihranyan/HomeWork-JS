@@ -9,6 +9,10 @@ const UserSchema = new Schema({
      email: String,
      age: Number,
      job: String,
+     isMailVerification: {
+          type: Boolean,
+          default: false,
+     },
 });
 
 export const User = mongoose.model('users', UserSchema);

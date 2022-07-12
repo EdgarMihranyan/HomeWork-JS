@@ -14,6 +14,8 @@ export const isCorrectPropertyUV = (prop) => {
           password: null,
           email: null,
           age: null,
+          job: null,
+          isMailVerification: null,
 
      };
      Object.keys(prop).forEach((key) => {

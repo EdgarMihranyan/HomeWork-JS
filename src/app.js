@@ -5,8 +5,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
+import authRouter from './api/auth/auth-router.js';
 import { keys } from './config/keys.js';
-import { User } from './models/user-model.js';
 
 mongoose.connect(keys.mongoURI)
      .then(() => {
@@ -19,14 +19,13 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 
 app.use((err, req, res, next) => {
      console.log(err);
-     res.status(err.statusCode).json({ errors: [{ ...err }] });
+     res.status(err.statusCode || 404).json({ errors: [{ ...err }] });
 });
 
 export default app;
-const got = await User.find();
-console.log(got);
