@@ -8,7 +8,7 @@ import { errorSignIn, errorSignUp } from '../../constants/constant-errors.js';
 import mailer from '../../utils/nodemailer.js';
 
 export const verificationS = async (data) => {
-     const { id } = await verificationJWT(data.params.token);
+     const { id } = await verificationJWT(data.token);
      updateUserS(id, { isMailVerification: true });
      return { message: 'Verification is completed' };
 };
@@ -20,22 +20,27 @@ export const signInS = async (user) => {
      console.log(email);
      const token = signJWT({ id: got.id }, '1h');
      if (!got.isMailVerification) {
-          mailer(messageJWT(email, token));
+          await mailer(messageJWT(email, token));
+
           return { message: `${email} address sent message, confirm to login` };
      }
      return { message: `Your token key to next steps  \`  ${token}` };
 };
 export const signUpS = async (data) => {
-     const { email } = data;
-     const got = await getUserByEmailS(email);
-     if (got) {
-          const token = signJWT({ id: got.id }, '5h');
-          if (got.isMailVerification) throw new ServerError(404, undefined, errorSignUp);
-          mailer(messageJWT(email, token));
-          return { message: `Your ${email} address has already been registered, we have sent a message, confirm to enter your account` };
+     try {
+          const { email } = data;
+          const got = await getUserByEmailS(email);
+          if (got) {
+               const token = signJWT({ id: got.id }, '5h');
+               if (got.isMailVerification) throw new ServerError(404, undefined, errorSignUp);
+               await mailer(messageJWT(email, token));
+               return { message: `Your ${email} address has already been registered, we have sent a message, confirm to enter your account` };
+          }
+          const user = await createUserS(data);
+          const token = signJWT({ id: user.id }, '5h');
+          await mailer(messageJWT(email, token));
+          return { message: `${email} address sent message, confirm to login` };
+     } catch (err) {
+          throw new ServerError(400, err.param, err.msg);
      }
-     const user = await createUserS(data);
-     const token = signJWT({ id: user.id }, '5h');
-     mailer(messageJWT(email, token));
-     return { message: `${email} address sent message, confirm to login` };
 };
