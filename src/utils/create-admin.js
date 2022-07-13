@@ -9,15 +9,15 @@ const createAdmin = async () => {
           new User({
                firstName: 'Gosh',
                lastName: 'Hayrapetyan',
-               password: 12345,
+               password: 123456789,
                email: adminEmail,
                age: 28,
                job: 'BackEnd',
                isMailVerification: true,
                isAdmin: true,
           }).save();
-          console.log('Admin ');
      }
+     console.log('Admin Gosh nearby');
 };
 
 export default createAdmin;

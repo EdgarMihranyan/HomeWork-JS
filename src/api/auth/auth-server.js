@@ -20,11 +20,12 @@ export const signInS = async (user) => {
      console.log(email);
      const token = signJWT({ id: got.id }, '1h');
      if (!got.isMailVerification) {
-          await mailer(messageJWT(email, token));
+          await mailer(messageJWT(email, 'Verification Email', token));
 
           return { message: `${email} address sent message, confirm to login` };
      }
-     return { message: `Your token key to next steps  \`  ${token}` };
+     const nextStepToken = signJWT({ isAdmin: got.isAdmin }, '6h');
+     return { message: `Your token key to next steps  \`  ${nextStepToken}` };
 };
 export const signUpS = async (data) => {
      try {
@@ -33,12 +34,12 @@ export const signUpS = async (data) => {
           if (got) {
                const token = signJWT({ id: got.id }, '5h');
                if (got.isMailVerification) throw new ServerError(404, undefined, errorSignUp);
-               await mailer(messageJWT(email, token));
+               await mailer(messageJWT(email, 'Verification Email', token));
                return { message: `Your ${email} address has already been registered, we have sent a message, confirm to enter your account` };
           }
           const user = await createUserS(data);
           const token = signJWT({ id: user.id }, '5h');
-          await mailer(messageJWT(email, token));
+          await mailer(messageJWT(email, 'Verification Email', token));
           return { message: `${email} address sent message, confirm to login` };
      } catch (err) {
           throw new ServerError(400, err.param, err.msg);

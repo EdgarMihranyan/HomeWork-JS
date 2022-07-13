@@ -6,19 +6,15 @@ const transporter = nodemailer.createTransport({
      port: 587,
      secure: false,
      auth: {
-          user: '1mygameshopproject@gmail.com',
+          user: 'mygameshopproject@gmail.com',
           pass: 'dpkqdqyhtytchcjx',
      },
 });
 const mailer = async (message) => {
      try {
-          transporter.sendMail(message, (err, info) => {
-               if (err) throw new ServerError(400, err.name, err.message);
-               console.log(`Email sent\`
-          ${JSON.stringify(info, undefined, 2)}`);
-          });
+          await transporter.sendMail(message);
      } catch (err) {
-          console.log('aaaaaaaaaaaaaaa');
+          throw new ServerError(400, 'Email', 'Email address error');
      }
 };
 

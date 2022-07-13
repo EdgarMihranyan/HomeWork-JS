@@ -9,6 +9,7 @@ import productRouter from './api/products/products-router.js';
 import authRouter from './api/auth/auth-router.js';
 import { keys } from './config/keys.js';
 import createAdmin from './utils/create-admin.js';
+import { authorization, isAdminChanges } from './utils/auth-middleware.js';
 
 mongoose.connect(keys.mongoURI)
      .then(() => {
@@ -23,8 +24,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/products', productRouter);
+app.use('/users', authorization, isAdminChanges, userRouter);
+app.use('/products', authorization, isAdminChanges, productRouter);
 
 app.use((err, req, res, next) => {
      console.log(err);
