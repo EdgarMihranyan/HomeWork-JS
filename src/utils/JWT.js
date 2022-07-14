@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
-const secret = 'vesemir';
+const secret = process.env.JWT_SECRET;
 
 export const signJWT = (data, expiresIn) => jwt.sign(data, secret, { expiresIn });
 export const verificationJWT = async (token) => jwt.verify(token, secret);
