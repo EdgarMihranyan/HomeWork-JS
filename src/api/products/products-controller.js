@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-     createProductS, deleteProductS, getProductS, getProductsS, updateProductS, getProductByCategoryS,
+     createProductS, deleteProductS, getProductS, getProductsS, updateProductS,
 } from './products-server.js';
 
 export const getProductC = async (req, res, next) => {
@@ -40,15 +40,6 @@ export const updateProductC = async (req, res, next) => {
           const { body, params } = req;
           await updateProductS(params.id, body);
           res.status(201).json({ message: 'Product updated' });
-     } catch (err) {
-          next(err);
-     }
-};
-export const getProductByCategoryC = async (req, res, next) => {
-     try {
-          const { body, params } = req;
-          const got = await getProductByCategoryS(params.category, body);
-          res.status(200).json(got);
      } catch (err) {
           next(err);
      }

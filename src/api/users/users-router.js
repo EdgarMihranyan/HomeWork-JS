@@ -1,22 +1,23 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
-     errorAlpha, errorLength, errorNotEmpty, errorUUID,
+     errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty, errorUUID,
 } from '../../constants/constant-errors.js';
 import expressValidation from '../../utils/express-utils.js';
+// import { isCorrectProperty } from './user-validator.js';
 import {
-     getUserC, getUsersC, createUserC, deleteUserC, updateUserC,
+     getUserC, getUsersC, createUserC, deleteUserC, updateUserC, changePasswordC,
 } from './users-controller.js';
 
-const userRouter = express.Router();
+const router = express.Router();
 
-userRouter.get('/', getUsersC);
+router.get('/', getUsersC);
 
-userRouter.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
+router.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
 
-userRouter.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
+router.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
 
-userRouter.post(
+router.post(
      '/',
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
           .withMessage(errorLength(2, 15))
@@ -35,7 +36,7 @@ userRouter.post(
      expressValidation,
      createUserC,
 );
-userRouter.patch(
+router.patch(
      '/:id',
      param('id').isMongoId().withMessage(errorUUID),
      body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
@@ -57,7 +58,21 @@ userRouter.patch(
           .withMessage('Incorrect email address')
           .optional(),
      expressValidation,
+     // isCorrectProperty,
      updateUserC,
 );
+router.post(
+     '/changepassword',
+     body('clientOldPassword').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlphanumeric),
+     body('clientNewPassword').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlphanumeric),
+     expressValidation,
+     changePasswordC,
+);
 
-export default userRouter;
+export default router;

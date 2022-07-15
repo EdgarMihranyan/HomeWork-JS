@@ -31,6 +31,3 @@ export const updateProductS = async (id, productUpd) => {
      isCorrectPropertyPV(productUpd);
      await updateProductR(id, productUpd);
 };
-export const getProductByCategoryS = async () => {
-
-};

@@ -9,7 +9,7 @@ const UserSchema = new Schema({
      email: String,
      age: Number,
      job: String,
-     isMailVerification: {
+     isVerifiedEmail: {
           type: Boolean,
           default: false,
      },

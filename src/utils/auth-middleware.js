@@ -1,23 +1,25 @@
-import { errorAuth, errorNotAdmin } from '../constants/constant-errors.js';
+import { errorAuth } from '../constants/constant-errors.js';
 import { ServerError } from './custom-errors.js';
-import { verificationJWT } from './JWT.js';
+import { verify } from './JWT.js';
 
-export const authorization = async (req, res, next) => {
+export const authorizationAdmin = (req, res, next) => {
      try {
           const token = (req.headers.authorization).split(' ')[1];
-          const verified = await verificationJWT(token);
+          const verified = verify(token);
+          if (!verified.isAdmin) {
+               next(new ServerError(401, 'Token', errorAuth));
+          }
           req.user = { id: verified.id };
           next();
      } catch (err) {
           next(new ServerError(401, 'Token', errorAuth));
      }
 };
-export const isAdminChanges = async (req, res, next) => {
+export const authorizationClient = (req, res, next) => {
      try {
           const token = (req.headers.authorization).split(' ')[1];
-          const { isAdmin } = await verificationJWT(token);
-          console.log(isAdmin);
-          if (!isAdmin) next(new ServerError(401, 'User', errorNotAdmin));
+          const verified = verify(token);
+          req.user = { id: verified.id };
           next();
      } catch (err) {
           next(new ServerError(401, 'Token', errorAuth));

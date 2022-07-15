@@ -1,12 +1,11 @@
 /* eslint-disable no-prototype-builtins */
+import { comparePassword, toHashPassword } from '../../utils/bcrypt.js';
 import { ServerError } from '../../utils/custom-errors.js';
-import { isCorrectPropertyUV } from './user-validator.js';
 import {
      createUserR, getUsersR, getUserR, getUserByEmailR, deleteUserR, updateUserR,
 } from './users-repository.js';
 
 export const getUsersS = async () => getUsersR();
-export const getUserByEmailS = async (email) => (await getUserByEmailR(email))[0];
 
 export const getUserS = async (id) => {
      const user = await getUserR(id);
@@ -24,14 +23,37 @@ export const deleteUserS = async (id) => {
      return user;
 };
 
-export const createUserS = async (user) => {
-     const got = (await getUserByEmailR(user.email))[0];
+export const getUserByEmailUnCheckS = async (email) => (await getUserByEmailR(email))[0];
 
+export const getUserByEmailS = async (email) => {
+     const got = getUserByEmailUnCheckS(email);
+
+     if (!got) {
+          throw new ServerError(400, `${email}\` user`, 'User not a found');
+     }
+     return got;
+};
+
+export const createUserS = async (user) => {
+     const got = await getUserByEmailUnCheckS(user.email);
+     console.log(got);
      if (got) throw new ServerError(400, user.email, 'Email is already exits');
-     return createUserR(user);
+
+     return createUserR({
+          ...user,
+          isVerifiedEmail: false,
+          password: await toHashPassword(user.password),
+     });
 };
 
 export const updateUserS = async (id, userUpd) => {
-     isCorrectPropertyUV(userUpd);
      await updateUserR(id, userUpd);
+};
+export const changePasswordS = async (user, id) => {
+     const userOldPassword = (await getUserS(id)).password;
+     const { clientOldPassword, clientNewPassword } = user;
+     const result = await comparePassword(clientOldPassword, userOldPassword);
+     if (!result) throw new ServerError(400, clientOldPassword, 'Password is not correct');
+     const hashPassword = await toHashPassword(clientNewPassword);
+     await updateUserS(id, { password: hashPassword });
 };

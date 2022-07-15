@@ -1,6 +1,13 @@
 import nodemailer from 'nodemailer';
 import { ServerError } from './custom-errors.js';
 
+export const messageMail = (email, subject, token) => ({
+     from: 'Amazon company <claude.zboncak85@ethereal.email>',
+     to: email,
+     subject,
+     html: `Click here to sign up =======> ${token}`,
+});
+
 const transporter = nodemailer.createTransport({
      host: 'smtp.gmail.com',
      port: 587,

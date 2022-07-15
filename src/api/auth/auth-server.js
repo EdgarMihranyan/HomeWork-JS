@@ -1,47 +1,50 @@
-/* eslint-disable no-param-reassign */
-import { messageJWT, signJWT, verificationJWT } from '../../utils/JWT.js';
+import { verify, sign } from '../../utils/JWT.js';
 import { ServerError } from '../../utils/custom-errors.js';
-import {
-     getUserByEmailS, createUserS, updateUserS,
-} from '../users/users-server.js';
-import { errorSignIn, errorSignUp } from '../../constants/constant-errors.js';
-import mailer from '../../utils/nodemailer.js';
-
-export const verificationS = async (data) => {
-     const { id } = await verificationJWT(data.token);
-     updateUserS(id, { isMailVerification: true });
-     return { message: 'Verification is completed' };
-};
+import { errorSignIn } from '../../constants/constant-errors.js';
+import { createUserS, getUserByEmailS, updateUserS } from '../users/users-server.js';
+import mailer, { messageMail } from '../../utils/nodemailer.js';
+import { comparePassword, toHashPassword } from '../../utils/bcrypt.js';
 
 export const signInS = async (user) => {
      const { email, password } = user;
+     console.log(email, password);
      const got = await getUserByEmailS(email);
-     if (!got && password !== got.password) throw new ServerError(404, undefined, errorSignIn);
-     console.log(email);
-     const token = signJWT({ id: got.id }, '1h');
-     if (!got.isMailVerification) {
-          await mailer(messageJWT(email, 'Verification Email', token));
+     console.log((await comparePassword(password, got.password)));
+     if (!(await comparePassword(password, got.password))) {
+          throw new ServerError(404, undefined, errorSignIn);
+     }
+     // console.log(got.isVerifiedEmail);
+     if (!got.isVerifiedEmail) {
+          const token = sign({ id: got.id, isAdmin: got.isAdmin }, '5h');
+          await mailer(messageMail(got.email, 'verification', token));
+          return { message: `Your ${email} address has already been registered, we have sent a message, confirm to enter your account` };
+     }
+     const token = sign({ id: got.id, isAdmin: got.isAdmin }, '6h');
 
-          return { message: `${email} address sent message, confirm to login` };
-     }
-     const nextStepToken = signJWT({ isAdmin: got.isAdmin }, '6h');
-     return { message: `Your token key to next steps  \`  ${nextStepToken}` };
+     return { token };
 };
-export const signUpS = async (data) => {
-     try {
-          const { email } = data;
-          const got = await getUserByEmailS(email);
-          if (got) {
-               const token = signJWT({ id: got.id }, '5h');
-               if (got.isMailVerification) throw new ServerError(404, undefined, errorSignUp);
-               await mailer(messageJWT(email, 'Verification Email', token));
-               return { message: `Your ${email} address has already been registered, we have sent a message, confirm to enter your account` };
-          }
-          const user = await createUserS(data);
-          const token = signJWT({ id: user.id }, '5h');
-          await mailer(messageJWT(email, 'Verification Email', token));
-          return { message: `${email} address sent message, confirm to login` };
-     } catch (err) {
-          throw new ServerError(400, err.param, err.msg);
-     }
+export const signUpS = async (user) => {
+     const created = await createUserS(user);
+     const token = sign({ id: created.id }, '5h');
+     await mailer(messageMail(created.email, 'Verification', token));
+     return { message: `${created.email} address sent message, confirm to login` };
+};
+
+export const verifyEmailS = async (token) => {
+     const verified = verify(token);
+     await updateUserS(verified.id, { isVerifiedEmail: true });
+     return { message: 'verification was successful' };
+};
+export const forgotPasswordS = async (email) => {
+     const user = await getUserByEmailS(email);
+     if (!user) throw new ServerError(404, user, 'User not a found');
+     const token = sign({ id: user.id }, '2h');
+     await mailer(messageMail(user.email, 'Forgot password', token));
+     return { message: ` to your ${user.email} address send a message, confirm to recover your password` };
+};
+export const changeByEmailPasswordS = async (id, password) => {
+     console.log(password);
+     const hashPassword = await toHashPassword(password);
+     updateUserS(id, { password: hashPassword });
+     return { message: 'User Password changes' };
 };
