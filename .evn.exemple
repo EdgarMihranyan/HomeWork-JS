@@ -1,0 +1,17 @@
+//Application
+PORT = '3000'
+
+// Mongo DB
+MONGO_USER = 'Geralt'
+MONGO_PASSWORD = 'edak9797'
+
+// JWT
+JWT_SECRET = 'vesemir'
+
+// BCRYPT
+SALT = 10
+
+
+// DEFAULT ADMIN
+ADMIN_EMAIL = 'marvel.node@gmail.com'
+ADMIN_PASS = 'marvel1111'
