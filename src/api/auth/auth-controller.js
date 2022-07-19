@@ -1,4 +1,3 @@
-import { verify } from '../../utils/JWT.js';
 import {
      signInS, signUpS, verifyEmailS, forgotPasswordS, changeByEmailPasswordS,
 } from './auth-server.js';
@@ -42,8 +41,7 @@ export const forgotPasswordC = async (req, res, next) => {
 export const changeByEmailPasswordC = async (req, res, next) => {
      try {
           const { token, password } = req.body;
-          const gotToken = verify(token);
-          const recovered = await changeByEmailPasswordS(gotToken.id, password);
+          const recovered = await changeByEmailPasswordS(token, password);
           res.status(201).json(recovered);
      } catch (err) {
           next(err);

@@ -8,7 +8,6 @@ const UserSchema = new Schema({
      password: String,
      email: String,
      age: Number,
-     job: String,
      isVerifiedEmail: {
           type: Boolean,
           default: false,
@@ -17,6 +16,11 @@ const UserSchema = new Schema({
           type: Boolean,
           default: false,
      },
+     additional: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'user-additions',
+     },
 });
 
-export const User = mongoose.model('users', UserSchema);
+const User = mongoose.model('users', UserSchema);
+export default User;

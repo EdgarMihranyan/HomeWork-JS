@@ -1,6 +1,6 @@
 import {
-     createUserS, deleteUserS, getUserS, getUsersS, updateUserS, changePasswordS,
-} from './users-server.js';
+     deleteUserS, getUserS, getUsersS, updateUserS, changePasswordS,
+} from './users-service.js';
 
 export const getUsersC = async (req, res, next) => {
      try {
@@ -22,14 +22,6 @@ export const deleteUserC = async (req, res, next) => {
      try {
           await deleteUserS(req.params.id);
           res.status(200).json({ message: 'User deleted' });
-     } catch (err) {
-          next(err);
-     }
-};
-export const createUserC = async (req, res, next) => {
-     try {
-          await createUserS(req.body);
-          res.status(201).json({ message: 'User created' });
      } catch (err) {
           next(err);
      }

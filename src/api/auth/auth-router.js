@@ -8,6 +8,7 @@ import expressValidation from '../../utils/express-utils.js';
 import {
      signInC, signUpC, verifyEmailC, forgotPasswordC, changeByEmailPasswordC,
 } from './auth-controller.js';
+import { isCorrectPropertyAV } from './auth-validator.js';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.post(
 );
 router.post(
      '/signup',
+     isCorrectPropertyAV,
      body('firstName').notEmpty().withMessage(errorNotEmpty('firstName')).isLength({ min: 2, max: 15 })
           .withMessage(errorLength(2, 15))
           .isAlpha('en-US')
@@ -42,6 +44,10 @@ router.post(
           .isAlphanumeric('en-US')
           .withMessage(errorAlphanumeric)
           .optional(),
+     body('job').notEmpty().withMessage(errorNotEmpty('job')),
+     body('age').notEmpty().withMessage(errorNotEmpty('age')),
+     body('gender').notEmpty().withMessage(errorNotEmpty('gender')),
+     body('blood').notEmpty().withMessage(errorNotEmpty('blood')),
      expressValidation,
      signUpC,
 );

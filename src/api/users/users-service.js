@@ -49,10 +49,10 @@ export const createUserS = async (user) => {
 export const updateUserS = async (id, userUpd) => {
      await updateUserR(id, userUpd);
 };
-export const changePasswordS = async (user, id) => {
-     const userOldPassword = (await getUserS(id)).password;
-     const { clientOldPassword, clientNewPassword } = user;
-     const result = await comparePassword(clientOldPassword, userOldPassword);
+export const changePasswordS = async (body, id) => {
+     const user = await getUserS(id);
+     const { clientOldPassword, clientNewPassword } = body;
+     const result = await comparePassword(clientOldPassword, user.password);
      if (!result) throw new ServerError(400, clientOldPassword, 'Password is not correct');
      const hashPassword = await toHashPassword(clientNewPassword);
      await updateUserS(id, { password: hashPassword });

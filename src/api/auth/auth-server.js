@@ -1,7 +1,7 @@
 import { verify, sign } from '../../utils/JWT.js';
 import { ServerError } from '../../utils/custom-errors.js';
 import { errorSignIn } from '../../constants/constant-errors.js';
-import { createUserS, getUserByEmailS, updateUserS } from '../users/users-server.js';
+import { createUserS, getUserByEmailS, updateUserS } from '../users/users-service.js';
 import mailer, { messageMail } from '../../utils/nodemailer.js';
 import { comparePassword, toHashPassword } from '../../utils/bcrypt.js';
 
@@ -13,7 +13,6 @@ export const signInS = async (user) => {
      if (!(await comparePassword(password, got.password))) {
           throw new ServerError(404, undefined, errorSignIn);
      }
-     // console.log(got.isVerifiedEmail);
      if (!got.isVerifiedEmail) {
           const token = sign({ id: got.id, isAdmin: got.isAdmin }, '5h');
           await mailer(messageMail(got.email, 'verification', token));
@@ -37,14 +36,16 @@ export const verifyEmailS = async (token) => {
 };
 export const forgotPasswordS = async (email) => {
      const user = await getUserByEmailS(email);
-     if (!user) throw new ServerError(404, user, 'User not a found');
-     const token = sign({ id: user.id }, '2h');
+
+     const token = sign({ id: user.id }, '5m');
      await mailer(messageMail(user.email, 'Forgot password', token));
      return { message: ` to your ${user.email} address send a message, confirm to recover your password` };
 };
-export const changeByEmailPasswordS = async (id, password) => {
+export const changeByEmailPasswordS = async (token, password) => {
      console.log(password);
+     const gotToken = verify(token);
+
      const hashPassword = await toHashPassword(password);
-     updateUserS(id, { password: hashPassword });
+     updateUserS(gotToken.id, { password: hashPassword });
      return { message: 'User Password changes' };
 };
