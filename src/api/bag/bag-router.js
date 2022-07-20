@@ -1,20 +1,9 @@
 import express from 'express';
-import { body } from 'express-validator';
-import { errorNotEmpty, errorUUID } from '../../constants/constant-errors.js';
-import expressValidation from '../../utils/express-utils.js';
-import { getUserBagC, addProductToBagC } from './bag-controller.js';
+import { getUserBagsC, addProductToBagC } from './bag-controller.js';
+import { validateIdBagProduct } from './bag-validation.js';
 
 const bagRouter = express.Router();
 
-bagRouter.get(
-     '/get-client-product',
-     getUserBagC,
-);
-bagRouter.post(
-     '/add-product',
-     body('purchasedProduct').notEmpty().withMessage(errorNotEmpty('purchasedProduct')).isMongoId()
-          .withMessage(errorUUID),
-     expressValidation,
-     addProductToBagC,
-);
+bagRouter.get('/', getUserBagsC);
+bagRouter.post('/', ...validateIdBagProduct, addProductToBagC);
 export default bagRouter;

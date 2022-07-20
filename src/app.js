@@ -40,7 +40,7 @@ const routing = () => {
      app.use('/client', authorizationClient, userRouter);
 
      // Client routs
-     app.use('/client-product', authorizationClient, clientProductRouter);
+     app.use('/client-product', clientProductRouter);
      app.use('/client', authorizationClient, clientUserRouter);
      app.use('/bag', authorizationClient, bagRouter);
 };

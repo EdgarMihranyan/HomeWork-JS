@@ -1,20 +1,22 @@
-import { verify } from '../../utils/JWT.js';
-import { addToOldBagR, getUserBagR, createBagR } from './bag-repository.js';
+import {
+     updateBag, getUserBagsR, createBagR, getBagByUserIdProductIdR,
+} from './bag-repository.js';
 
-export const getUserBagS = async (token) => {
-     const { id } = verify(token);
-     const userBag = (await getUserBagR(id))[0];
+export const getUserBagsS = async (userId) => {
+     const userBag = await getUserBagsR(userId);
      return userBag;
 };
 
-export const addProductToBagS = async (productId, token) => {
-     const userId = verify(token).id;
-     const existingClient = await getUserBagS(token);
-     const clientUserId = existingClient?.userId.toString();
-     const clientProductId = existingClient?.productId.toString();
-     if (clientUserId === userId && clientProductId === productId) {
-          await addToOldBagR(existingClient.id, { count: ++existingClient.count });
-          return false;
+export const getBagByUserIdProductIdS = async (userId, productId) => {
+     const userBag = await getBagByUserIdProductIdR(userId, productId);
+     return userBag[0];
+};
+
+export const addProductToBagS = async (userId, productId) => {
+     const existingBag = await getBagByUserIdProductIdS(userId, productId);
+     if (existingBag) {
+          await updateBag(existingBag.id, { count: existingBag.count + 1 });
+          return true;
      }
      await createBagR(userId, productId);
      return true;

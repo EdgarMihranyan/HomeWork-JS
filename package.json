@@ -23,7 +23,7 @@
   "description": "HomeWork",
   "scripts": {
     "start": "npm run start",
-    "server": "nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "@types/express": "^4.17.13",

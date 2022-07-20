@@ -1,9 +1,8 @@
-import { addProductToBagS, getUserBagS } from './bag-service.js';
+import { addProductToBagS, getUserBagsS } from './bag-service.js';
 
-export const getUserBagC = async (req, res, next) => {
+export const getUserBagsC = async (req, res, next) => {
      try {
-          const token = (req.headers.authorization).split(' ')[1];
-          const got = await getUserBagS(token);
+          const got = await getUserBagsS(req.user.id);
           res.status(201).json(got);
      } catch (err) {
           next(err);
@@ -11,9 +10,8 @@ export const getUserBagC = async (req, res, next) => {
 };
 export const addProductToBagC = async (req, res, next) => {
      try {
-          const { purchasedProduct } = req.body;
-          const token = (req.headers.authorization).split(' ')[1];
-          await addProductToBagS(purchasedProduct, token);
+          const { body, user } = req;
+          await addProductToBagS(user.id, body.productId);
           res.status(201).json({ message: 'Product added your bag' });
      } catch (err) {
           next(err);

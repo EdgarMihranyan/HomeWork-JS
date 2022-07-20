@@ -1,6 +1,11 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-mixed-operators */
-import { errorAlphanumeric } from '../../constants/constant-errors.js';
+import { body, param } from 'express-validator';
+import expressValidation from '../../utils/express-utils.js';
+
+import {
+     errorAlphanumeric, errorLength, errorNotEmpty, errorUUID,
+} from '../../constants/constant-errors.js';
 import { ValidatorError } from '../../utils/custom-errors.js';
 
 export const checkLicenseKeyV = (req, res, next) => {
@@ -36,7 +41,7 @@ export const isCorrectPropertyPV = (prop) => {
      });
 };
 export const isCorrectCategoryV = (req, res, next) => {
-     const { body } = req;
+     const { body: reqBody } = req;
      const typeSchema = {
           videoGameName: null,
           developers: null,
@@ -45,8 +50,46 @@ export const isCorrectCategoryV = (req, res, next) => {
           productPriceInUSD: null,
 
      };
-     Object.keys(body).forEach((key) => {
+     Object.keys(reqBody).forEach((key) => {
           if (!typeSchema.hasOwnProperty(key)) next(new ValidatorError(404, key, 'Property not a found'));
      });
      next();
 };
+export const validateCreateProduct = [
+     body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
+          .withMessage(errorLength(2, 3))
+          .isAlphanumeric('en-US', { ignore: ' _-' })
+          .withMessage(errorAlphanumeric),
+     body('platform').notEmpty().withMessage(errorNotEmpty('platform')).isIn(['ps4', 'PS4', 'ps3', 'PS3', 'xbox', 'XBOX', 'windows', 'WINDOWS'])
+          .withMessage('this platform is not supported'),
+     body('developers').notEmpty().withMessage(errorNotEmpty('developers')).isAlphanumeric('en-US', { ignore: ' -' })
+          .withMessage(errorAlphanumeric),
+     body('releaseDate').notEmpty().withMessage(errorNotEmpty('releaseData')).isInt({ min: 2000, max: 2022 })
+          .withMessage('Wrong release year'),
+     body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
+          .withMessage('Enter the correct amount ( "The amount must be at least $10" )'),
+     expressValidation,
+];
+
+export const validateUpdateProduct = [
+     param('id').isMongoId().withMessage(errorUUID),
+     body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
+          .withMessage(errorLength(2, 30))
+          .isAlphanumeric('en-US', { ignore: ' _-' })
+          .withMessage(errorAlphanumeric)
+          .optional(),
+     body('platform').notEmpty().withMessage(errorNotEmpty('platform')).isIn(['ps4', 'PS4', 'ps3', 'PS3', 'xbox', 'XBOX', 'windows', 'WINDOWS'])
+          .withMessage('this platform is not supported')
+          .optional(),
+     body('developers').notEmpty().withMessage(errorNotEmpty('developers')).isAlphanumeric('en-US', { ignore: ' -' })
+          .withMessage(errorAlphanumeric)
+          .optional(),
+     body('releaseDate').notEmpty().withMessage(errorNotEmpty('releaseData')).isInt({ min: 2000, max: 2022 })
+          .withMessage('Wrong release year')
+          .optional(),
+     body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
+          .withMessage('Enter the correct amount ( "The amount must be at least $10" )')
+          .optional(),
+     expressValidation,
+];
+export const validateIdProduct = [param('id').isMongoId().withMessage(errorUUID), expressValidation];
