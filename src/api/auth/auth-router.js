@@ -47,7 +47,7 @@ router.post(
      body('job').notEmpty().withMessage(errorNotEmpty('job')),
      body('age').notEmpty().withMessage(errorNotEmpty('age')),
      body('gender').notEmpty().withMessage(errorNotEmpty('gender')),
-     body('blood').notEmpty().withMessage(errorNotEmpty('blood')),
+     body('blood').notEmpty().withMessage(errorNotEmpty('blood')).optional(),
      expressValidation,
      signUpC,
 );

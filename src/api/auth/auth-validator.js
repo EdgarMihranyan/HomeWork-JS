@@ -13,7 +13,6 @@ export const isCorrectPropertyAV = (req, res, next) => {
           job: null,
           gender: null,
           blood: null,
-
      };
      Object.keys(body).forEach((key) => {
           if (!typeSchema.hasOwnProperty(key)) next(new ValidatorError(404, key, 'Property not a found'));

@@ -54,4 +54,6 @@ export const validateUpdateUser = [
           .optional(),
      expressValidation,
 ];
-export const validateIdUser = [param('id').isMongoId().withMessage(errorUUID), expressValidation];
+export const validateIdUser = [
+     param('id').isMongoId().withMessage(errorUUID), expressValidation,
+];
