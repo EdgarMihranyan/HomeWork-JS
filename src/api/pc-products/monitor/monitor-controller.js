@@ -29,6 +29,7 @@ export const deleteMonitorC = async (req, res, next) => {
 };
 export const createMonitorC = async (req, res, next) => {
      try {
+          console.log('aaaaaaaaaaaaaa');
           await createMonitorS(req.body);
           res.status(201).json({ message: 'Monitor created' });
      } catch (err) {

@@ -5,6 +5,7 @@ import {
 
 export const getProductsC = async (req, res, next) => {
      try {
+          console.log('aaaaaaaaaaaaaa');
           const got = await getProductsS();
           res.status(200).json(got);
      } catch (err) {

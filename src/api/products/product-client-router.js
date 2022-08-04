@@ -5,7 +5,6 @@ import {
 import expressValidation from '../../utils/express-utils.js';
 
 const productRouter = express.Router();
-
 productRouter.get(
      '/',
      getProductsC,

@@ -7,12 +7,12 @@ import {
      isCorrectCategoryV, validateCreateVideoCardV, validateIdVideoCardV, validateUpdateVideoCardV,
 } from './video-card-validator.js';
 
-const mouseRouter = express.Router();
+const videoCardRouter = express.Router();
 
-mouseRouter.post('/', ...validateCreateVideoCardV, isCorrectCategoryV, createVideoCardC);
+videoCardRouter.post('/', ...validateCreateVideoCardV, isCorrectCategoryV, createVideoCardC);
 
-mouseRouter.patch('/:id', ...validateUpdateVideoCardV, isCorrectCategoryV, updateVideoCardC);
+videoCardRouter.patch('/:id', ...validateUpdateVideoCardV, isCorrectCategoryV, updateVideoCardC);
 
-mouseRouter.delete('/:id', ...validateIdVideoCardV, deleteVideoCardC);
+videoCardRouter.delete('/:id', ...validateIdVideoCardV, deleteVideoCardC);
 
-export default mouseRouter;
+export default videoCardRouter;

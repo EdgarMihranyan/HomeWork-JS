@@ -1,6 +1,6 @@
 import {
      signInS, signUpS, verifyEmailS, forgotPasswordS, changeByEmailPasswordS,
-} from './auth-server.js';
+} from './auth-service.js';
 
 export const signInC = async (req, res, next) => {
      try {

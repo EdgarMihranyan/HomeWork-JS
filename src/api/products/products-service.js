@@ -27,6 +27,5 @@ export const createProductS = async (product) => {
 };
 
 export const updateProductS = async (id, productUpd) => {
-     console.log(productUpd, id);
      await updateProductR(id, productUpd);
 };

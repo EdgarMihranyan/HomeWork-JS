@@ -5,7 +5,6 @@ const { Schema } = mongoose;
 const KeyboardSchema = new Schema({
      brand: String,
      modelName: String,
-     supportInHz: Number,
      productPriceInUSD: Number,
 
 });

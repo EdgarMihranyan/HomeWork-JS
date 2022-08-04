@@ -3,8 +3,14 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const ProductSchema = new Schema({
-     userId: mongoose.Schema.Types.ObjectId,
-     productId: mongoose.Schema.Types.ObjectId,
+     userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'users',
+     },
+     productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'products',
+     },
      count: {
           type: Number,
           default: 1,
@@ -12,4 +18,5 @@ const ProductSchema = new Schema({
 
 });
 const Bag = mongoose.model('bag-products', ProductSchema);
+
 export default Bag;

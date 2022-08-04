@@ -1,7 +1,7 @@
 import UserAdditional from '../../models/user-additional-model.js';
 import User from '../../models/user-model.js';
 
-export const getUsersR = async () => User.find();
+export const getUsersR = async () => User.find().populate('additional');
 export const getUserR = async (id) => User.findById(id).populate('additional');
 export const getUserByEmailR = async (email) => User.find({ email });
 export const deleteUserR = async (id) => User.deleteOne({ _id: id });

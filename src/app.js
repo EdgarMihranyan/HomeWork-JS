@@ -13,6 +13,7 @@ import { authorizationAdmin, authorizationClient } from './utils/auth-middleware
 import User from './models/user-model.js';
 import { getUserByEmailUnCheckS } from './api/users/users-service.js';
 import { toHashPassword } from './utils/bcrypt.js';
+import pcRouter from './api/pc/pc-router.js';
 
 const app = express();
 
@@ -37,6 +38,7 @@ const routing = () => {
      // Admin routs
      app.use('/users', authorizationAdmin, userRouter);
      app.use('/products', authorizationAdmin, productRouter);
+     app.use('/pc', authorizationAdmin, pcRouter);
      app.use('/client', authorizationClient, userRouter);
 
      // Client routs

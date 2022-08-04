@@ -4,15 +4,15 @@ import {
 } from './monitor-controller.js';
 
 import {
-     isCorrectCategoryV, validateCreateMonitorV, validateIdMonitorV, validateUpdateMonitorV,
+     validateCreateMonitorV, validateIdMonitorV, validateUpdateMonitorV,
 } from './monitor-validator.js';
 
 const monitorRouter = express.Router();
+monitorRouter.post('/', ...validateCreateMonitorV, createMonitorC);
 
-monitorRouter.post('/', ...validateCreateMonitorV, isCorrectCategoryV, createMonitorC);
-
-monitorRouter.patch('/:id', ...validateUpdateMonitorV, isCorrectCategoryV, updateMonitorC);
+monitorRouter.patch('/:id', ...validateUpdateMonitorV, updateMonitorC);
 
 monitorRouter.delete('/:id', ...validateIdMonitorV, deleteMonitorC);
 
 export default monitorRouter;
+console.log('monitor');
