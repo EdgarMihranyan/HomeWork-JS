@@ -7,10 +7,9 @@ import { comparePassword, toHashPassword } from '../../utils/bcrypt.js';
 
 export const signInS = async (user) => {
      const { email, password } = user;
-     console.log(email, password);
      const got = await getUserByEmailS(email);
-     console.log((await comparePassword(password, got.password)));
-     if (!(await comparePassword(password, got.password))) {
+     const checkPassword = await comparePassword(password, got.password);
+     if (!checkPassword) {
           throw new ServerError(404, undefined, errorSignIn);
      }
      if (!got.isVerifiedEmail) {
@@ -42,7 +41,6 @@ export const forgotPasswordS = async (email) => {
      return { message: ` to your ${user.email} address send a message, confirm to recover your password` };
 };
 export const changeByEmailPasswordS = async (token, password) => {
-     console.log(password);
      const gotToken = verify(token);
 
      const hashPassword = await toHashPassword(password);

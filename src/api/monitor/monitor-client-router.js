@@ -2,7 +2,7 @@ import express from 'express';
 import {
      getMonitorC, getMonitorsC,
 } from './monitor-controller.js';
-import expressValidation from '../../../utils/express-utils.js';
+import expressValidation from '../../utils/express-utils.js';
 
 const monitorRouter = express.Router();
 

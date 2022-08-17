@@ -1,8 +1,13 @@
 /* eslint-disable no-prototype-builtins */
+import { body } from 'express-validator';
+import {
+     errorAlpha, errorAlphanumeric, errorEmail, errorJWT, errorLength, errorNotEmpty,
+} from '../../constants/constant-errors.js';
 import { ValidatorError } from '../../utils/custom-errors.js';
+import expressValidation from '../../utils/express-utils.js';
 
 export const isCorrectPropertyAV = (req, res, next) => {
-     const { body } = req;
+     const prop = req.body;
 
      const typeSchema = {
           firstName: null,
@@ -14,8 +19,66 @@ export const isCorrectPropertyAV = (req, res, next) => {
           gender: null,
           blood: null,
      };
-     Object.keys(body).forEach((key) => {
+     Object.keys(prop).forEach((key) => {
           if (!typeSchema.hasOwnProperty(key)) next(new ValidatorError(404, key, 'Property not a found'));
      });
      next();
 };
+export const validateSignUpUser = [
+     body('firstName').notEmpty().withMessage(errorNotEmpty('firstName')).isLength({ min: 2, max: 15 })
+          .withMessage(errorLength(2, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha),
+     body('lastName').notEmpty().withMessage(errorNotEmpty('lastName')).isLength({ min: 3, max: 15 })
+          .withMessage(errorLength(3, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha),
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
+          .withMessage(errorEmail),
+     body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlphanumeric),
+     body('job').notEmpty().withMessage(errorNotEmpty('job')),
+     body('age').notEmpty().withMessage(errorNotEmpty('age')),
+     body('gender').notEmpty().withMessage(errorNotEmpty('gender')),
+     body('blood').notEmpty().withMessage(errorNotEmpty('blood')),
+     expressValidation,
+];
+export const validateUserToken = [
+     body('token')
+          .notEmpty()
+          .withMessage(errorNotEmpty('Email'))
+          .isJWT()
+          .withMessage(errorJWT),
+     expressValidation,
+];
+export const validateUserMail = [
+     body('email').notEmpty().withMessage(errorNotEmpty('Email')).isEmail()
+          .withMessage(errorEmail),
+     expressValidation,
+];
+export const validateUserPassword = [
+     body('token')
+          .notEmpty()
+          .withMessage(errorNotEmpty('Email'))
+          .isJWT()
+          .withMessage(errorJWT),
+     body('password')
+          .notEmpty()
+          .withMessage(errorNotEmpty('password'))
+          .isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha),
+     expressValidation,
+];
+export const validateSignInUser = [
+     body('email').notEmpty().withMessage(errorNotEmpty('Email')).isEmail()
+          .withMessage(errorEmail),
+     body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US', { ignore: '._-' })
+          .withMessage(errorAlphanumeric),
+     expressValidation,
+];

@@ -1,5 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import { ServerError } from '../../../utils/custom-errors.js';
+import { ServerError } from '../../utils/custom-errors.js';
 import {
      createMouseR, getMousesR, getMouseR, deleteMouseR, updateMouseR,
 } from './mouse-repository.js';

@@ -2,7 +2,7 @@ import express from 'express';
 import {
      getKeyboardC, getKeyboardsC,
 } from './keyboard-controller.js';
-import expressValidation from '../../../utils/express-utils.js';
+import expressValidation from '../../utils/express-utils.js';
 
 const keyboardRouter = express.Router();
 

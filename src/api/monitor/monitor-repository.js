@@ -1,4 +1,4 @@
-import Monitor from '../../../models/pc/monitor-model.js';
+import Monitor from '../../models/pc/monitor-model.js';
 
 export const getMonitorsR = async () => Monitor.find();
 export const getMonitorR = async (id) => Monitor.findById(id);

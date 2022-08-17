@@ -2,7 +2,7 @@ import express from 'express';
 import {
      getHeadphonesC, getHeadphonessC,
 } from './headphones-controller.js';
-import expressValidation from '../../../utils/express-utils.js';
+import expressValidation from '../../utils/express-utils.js';
 
 const headphonesRouter = express.Router();
 

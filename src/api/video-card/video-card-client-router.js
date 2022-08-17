@@ -2,7 +2,7 @@ import express from 'express';
 import {
      getVideoCardC, getVideoCardsC,
 } from './video-card-controller.js';
-import expressValidation from '../../../utils/express-utils.js';
+import expressValidation from '../../utils/express-utils.js';
 
 const videoCardRouter = express.Router();
 

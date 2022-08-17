@@ -5,7 +5,6 @@ import {
 
 export const getProductsC = async (req, res, next) => {
      try {
-          console.log('aaaaaaaaaaaaaa');
           const got = await getProductsS();
           res.status(200).json(got);
      } catch (err) {
@@ -39,7 +38,6 @@ export const createProductC = async (req, res, next) => {
 export const updateProductC = async (req, res, next) => {
      try {
           const { body, params } = req;
-          console.log(params);
           await updateProductS(params.id, body);
           res.status(201).json({ message: 'Product updated' });
      } catch (err) {

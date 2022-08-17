@@ -1,11 +1,11 @@
 /* eslint-disable no-prototype-builtins */
 import { body, param } from 'express-validator';
-import expressValidation from '../../../utils/express-utils.js';
+import expressValidation from '../../utils/express-utils.js';
 
 import {
      errorAlphanumeric, errorNotEmpty, errorUUID,
-} from '../../../constants/constant-errors.js';
-import { ValidatorError } from '../../../utils/custom-errors.js';
+} from '../../constants/constant-errors.js';
+import { ValidatorError } from '../../utils/custom-errors.js';
 
 export const isCorrectPropertyPV = (prop) => {
      const typeSchema = {

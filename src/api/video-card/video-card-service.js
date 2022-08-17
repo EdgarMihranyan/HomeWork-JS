@@ -1,5 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import { ServerError } from '../../../utils/custom-errors.js';
+import { ServerError } from '../../utils/custom-errors.js';
 import {
      createVideoCardR, getVideoCardsR, getVideoCardR, deleteVideoCardR, updateVideoCardR,
 } from './video-card-repository.js';

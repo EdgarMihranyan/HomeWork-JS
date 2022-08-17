@@ -1,4 +1,4 @@
-import Keyboard from '../../../models/pc/keyboard-model.js';
+import Keyboard from '../../models/pc/keyboard-model.js';
 
 export const getKeyboardsR = async () => Keyboard.find();
 export const getKeyboardR = async (id) => Keyboard.findById(id);

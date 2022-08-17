@@ -1,4 +1,4 @@
-import Mouse from '../../../models/pc/mouse-model.js';
+import Mouse from '../../models/pc/mouse-model.js';
 
 export const getMousesR = async () => Mouse.find();
 export const getMouseR = async (id) => Mouse.findById(id);

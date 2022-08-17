@@ -15,4 +15,3 @@ monitorRouter.patch('/:id', ...validateUpdateMonitorV, updateMonitorC);
 monitorRouter.delete('/:id', ...validateIdMonitorV, deleteMonitorC);
 
 export default monitorRouter;
-console.log('monitor');

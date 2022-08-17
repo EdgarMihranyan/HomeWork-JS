@@ -9,6 +9,11 @@ import bagRouter from './api/bag/bag-router.js';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
 import authRouter from './api/auth/auth-router.js';
+import headphonesRouter from './api/headphones/headphones-router.js';
+import keyboardRouter from './api/keyboard/keyboard-router.js';
+import monitorRouter from './api/monitor/monitor-router.js';
+import mouseRouter from './api/mouse/mouse-router.js';
+import videoCardRouter from './api/video-card/video-card-router.js';
 import { authorizationAdmin, authorizationClient } from './utils/auth-middleware.js';
 import User from './models/user-model.js';
 import { getUserByEmailUnCheckS } from './api/users/users-service.js';
@@ -38,19 +43,25 @@ const routing = () => {
      // Admin routs
      app.use('/users', authorizationAdmin, userRouter);
      app.use('/products', authorizationAdmin, productRouter);
-     app.use('/pc', authorizationAdmin, pcRouter);
      app.use('/client', authorizationClient, userRouter);
 
      // Client routs
-     app.use('/client-product', clientProductRouter);
+     app.use('/client-product', authorizationClient, clientProductRouter);
      app.use('/client', authorizationClient, clientUserRouter);
      app.use('/bag', authorizationClient, bagRouter);
+
+     app.use('/pc', authorizationAdmin, pcRouter);
+     app.use('/monitor', monitorRouter);
+     app.use('/video-card', videoCardRouter);
+     app.use('/keyboard', keyboardRouter);
+     app.use('/headphones', headphonesRouter);
+     app.use('/mouse', mouseRouter);
 };
 
 const errorHandling = () => {
      app.use((err, req, res, next) => {
           console.log(err);
-          res.status(err.statusCode || 500).json({ errors: [{ ...err }] });
+          res.status(err.statusCode || 400).json({ errors: [{ ...err }] });
      });
 };
 

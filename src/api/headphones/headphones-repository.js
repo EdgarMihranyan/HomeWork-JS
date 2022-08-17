@@ -1,4 +1,4 @@
-import Headphones from '../../../models/pc/headphones-model.js';
+import Headphones from '../../models/pc/headphones-model.js';
 
 export const getHeadphonessR = async () => Headphones.find();
 export const getHeadphonesR = async (id) => Headphones.findById(id);

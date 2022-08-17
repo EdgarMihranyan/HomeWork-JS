@@ -1,4 +1,4 @@
-import VideoCard from '../../../models/pc/video-card-model.js';
+import VideoCard from '../../models/pc/video-card-model.js';
 
 export const getVideoCardsR = async () => VideoCard.find();
 export const getVideoCardR = async (id) => VideoCard.findById(id);

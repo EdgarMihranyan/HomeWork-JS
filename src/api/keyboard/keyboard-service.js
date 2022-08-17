@@ -1,5 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import { ServerError } from '../../../utils/custom-errors.js';
+import { ServerError } from '../../utils/custom-errors.js';
 import {
      createKeyboardR, getKeyboardsR, getKeyboardR, deleteKeyboardR, updateKeyboardR,
 } from './keyboard-repository.js';
