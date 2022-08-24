@@ -43,7 +43,7 @@ export const validateSignUpUser = [
      body('age').notEmpty().withMessage(errorNotEmpty('age')).isInt()
           .withMessage(errorNumber),
      body('gender').notEmpty().withMessage(errorNotEmpty('gender')),
-     body('blood').notEmpty().withMessage(errorNotEmpty('blood')),
+     body('address').notEmpty().withMessage(errorNotEmpty('blood')),
      expressValidation,
 ];
 

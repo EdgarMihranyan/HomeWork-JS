@@ -1,4 +1,5 @@
 /* eslint-disable no-prototype-builtins */
+import { errorSignIn } from '../../constants/constant-errors.js';
 import { toHashPassword } from '../../utils/bcrypt.js';
 import { ServerError } from '../../utils/custom-errors.js';
 import {
@@ -15,6 +16,7 @@ export const getUserS = async (id) => {
 };
 export const getUserByEmailS = async (email) => {
      const got = await getUserByEmailR(email);
+     if (!got) throw new ServerError(400, email, errorSignIn);
      return got;
 };
 
