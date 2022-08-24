@@ -8,6 +8,9 @@ const UserSchema = new Schema({
      password: String,
      email: String,
      age: Number,
+     job: String,
+     address: String,
+     gender: String,
      isVerifiedEmail: {
           type: Boolean,
           default: false,
@@ -15,10 +18,6 @@ const UserSchema = new Schema({
      isAdmin: {
           type: Boolean,
           default: false,
-     },
-     additional: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'user-additions',
      },
 });
 

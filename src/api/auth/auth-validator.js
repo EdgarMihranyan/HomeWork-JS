@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { body } from 'express-validator';
 import {
-     errorAlpha, errorAlphanumeric, errorEmail, errorJWT, errorLength, errorNotEmpty,
+     errorAlpha, errorAlphanumeric, errorEmail, errorLength, errorNotEmpty, errorNumber,
 } from '../../constants/constant-errors.js';
 import { ValidatorError } from '../../utils/custom-errors.js';
 import expressValidation from '../../utils/express-utils.js';
@@ -16,8 +16,8 @@ export const isCorrectPropertyAV = (req, res, next) => {
           email: null,
           age: null,
           job: null,
+          address: null,
           gender: null,
-          blood: null,
      };
      Object.keys(prop).forEach((key) => {
           if (!typeSchema.hasOwnProperty(key)) next(new ValidatorError(404, key, 'Property not a found'));
@@ -40,37 +40,16 @@ export const validateSignUpUser = [
           .isAlphanumeric('en-US')
           .withMessage(errorAlphanumeric),
      body('job').notEmpty().withMessage(errorNotEmpty('job')),
-     body('age').notEmpty().withMessage(errorNotEmpty('age')),
+     body('age').notEmpty().withMessage(errorNotEmpty('age')).isInt()
+          .withMessage(errorNumber),
      body('gender').notEmpty().withMessage(errorNotEmpty('gender')),
      body('blood').notEmpty().withMessage(errorNotEmpty('blood')),
      expressValidation,
 ];
-export const validateUserToken = [
-     body('token')
-          .notEmpty()
-          .withMessage(errorNotEmpty('Email'))
-          .isJWT()
-          .withMessage(errorJWT),
-     expressValidation,
-];
+
 export const validateUserMail = [
      body('email').notEmpty().withMessage(errorNotEmpty('Email')).isEmail()
           .withMessage(errorEmail),
-     expressValidation,
-];
-export const validateUserPassword = [
-     body('token')
-          .notEmpty()
-          .withMessage(errorNotEmpty('Email'))
-          .isJWT()
-          .withMessage(errorJWT),
-     body('password')
-          .notEmpty()
-          .withMessage(errorNotEmpty('password'))
-          .isLength({ min: 8, max: 20 })
-          .withMessage(errorLength(8, 20))
-          .isAlphanumeric('en-US')
-          .withMessage(errorAlpha),
      expressValidation,
 ];
 export const validateSignInUser = [
@@ -78,7 +57,7 @@ export const validateSignInUser = [
           .withMessage(errorEmail),
      body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
           .withMessage(errorLength(8, 20))
-          .isAlphanumeric('en-US', { ignore: '._-' })
+          .isAlphanumeric('en-US', { ignore: '._' })
           .withMessage(errorAlphanumeric),
      expressValidation,
 ];

@@ -1,24 +1,8 @@
-/* eslint-disable no-unused-vars */
 import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import 'dotenv/config';
-import clientProductRouter from './api/products/product-client-router.js';
-import clientUserRouter from './api/users/user-client-router.js';
-import bagRouter from './api/bag/bag-router.js';
 import userRouter from './api/users/users-router.js';
-import productRouter from './api/products/products-router.js';
 import authRouter from './api/auth/auth-router.js';
-import headphonesRouter from './api/headphones/headphones-router.js';
-import keyboardRouter from './api/keyboard/keyboard-router.js';
-import monitorRouter from './api/monitor/monitor-router.js';
-import mouseRouter from './api/mouse/mouse-router.js';
-import videoCardRouter from './api/video-card/video-card-router.js';
-import { authorizationAdmin, authorizationClient } from './utils/auth-middleware.js';
-import User from './models/user-model.js';
-import { getUserByEmailUnCheckS } from './api/users/users-service.js';
-import { toHashPassword } from './utils/bcrypt.js';
-import pcRouter from './api/pc/pc-router.js';
 
 const app = express();
 
@@ -28,8 +12,7 @@ const ExpressMiddleware = () => {
 };
 
 const mongoConnection = async () => {
-     const { MONGO_USER, MONGO_PASSWORD } = process.env;
-     const mongoURI = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@mypurpose.f77oc.mongodb.net/?retryWrites=true&w=majority`;
+     const mongoURI = 'mongodb+srv://geralt:9797@geralt.7djrpvu.mongodb.net/?retryWrites=true&w=majority';
      try {
           await mongoose.connect(mongoURI);
           console.log('MongoDB connected ...');
@@ -40,59 +23,21 @@ const mongoConnection = async () => {
 
 const routing = () => {
      app.use('/auth', authRouter);
-     // Admin routs
-     app.use('/users', authorizationAdmin, userRouter);
-     app.use('/products', authorizationAdmin, productRouter);
-     app.use('/client', authorizationClient, userRouter);
 
-     // Client routs
-     app.use('/client-product', authorizationClient, clientProductRouter);
-     app.use('/client', authorizationClient, clientUserRouter);
-     app.use('/bag', authorizationClient, bagRouter);
-
-     app.use('/pc', authorizationAdmin, pcRouter);
-     app.use('/monitor', monitorRouter);
-     app.use('/video-card', videoCardRouter);
-     app.use('/keyboard', keyboardRouter);
-     app.use('/headphones', headphonesRouter);
-     app.use('/mouse', mouseRouter);
+     app.use('/users', userRouter);
 };
 
 const errorHandling = () => {
+     // eslint-disable-next-line no-unused-vars
      app.use((err, req, res, next) => {
           console.log(err);
           res.status(err.statusCode || 400).json({ errors: [{ ...err }] });
      });
 };
 
-const createDefaultAdmin = async () => {
-     const { ADMIN_EMAIL, ADMIN_PASS } = process.env;
-     const existUser = await getUserByEmailUnCheckS(ADMIN_EMAIL);
-     if (existUser) {
-          console.log('Admin is here');
-          return false;
-     }
-
-     const admin = {
-          firstName: 'Admin',
-          lastName: 'Admin',
-          age: 27,
-          email: ADMIN_EMAIL,
-          password: await toHashPassword(ADMIN_PASS),
-          job: 'uGeek',
-          isVerifiedEmail: true,
-          isAdmin: true,
-     };
-
-     const user = new User(admin);
-     await user.save();
-     console.log('Admin is coming');
-     return true;
-};
 const init = async () => {
      ExpressMiddleware();
      await mongoConnection();
-     await createDefaultAdmin();
      routing();
      errorHandling();
 };
